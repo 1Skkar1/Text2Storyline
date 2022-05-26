@@ -1,0 +1,372 @@
+<div class="results my-col2" style="overflow-x: hidden">
+  <div *ngIf="!options else display">
+    <h1>Não foram encontrados dados, em caso de dúvida, a culpa é da API</h1>
+  </div>
+
+  <ng-template #display>
+    <mat-card class="cardQuery" style="background-color: #f7f7f7; border: none !important;">
+      <mat-tab-group class="mat-elevation-z0" mat-align-tabs="center" dynamicHeight>
+        <div *ngIf="queryType === 'single'">
+          <!-- ANNOTATED TEXT-->
+          <mat-tab class="label" label="Texto Anotado">
+            <br>
+            <p>URL: <u><a class="linkDoMal" href="{{inpSingle}}" target="_blank">{{inpSingle}}</a></u></p>
+            <hr>
+            <app-frame [freeText]="false" [errorWikifier]="errorWikifier" [score]="options.score" [args]="options.result" [showOnlyRelevants]="showOnlyRel" [keywordsMatter]="withKeywords" [entitiesMatter]="withEntities" [wiki]="wiki" [dbpedia]="dbpedia" class="result"></app-frame>
+            <hr>
+            <div class="dateScoreColors">
+              <span><b>Escala Likert de <i>{{!showOnlyRel?"5": "3"}}</i> cores para representar a importância das expressões temporais: </b></span>
+              <span class='{{!showOnlyRel?"black": "nonviewable"}}'>[0 - 0.35]</span>
+              <span class='{{!showOnlyRel?"green": "nonviewable"}}'>]0.35 - 0.5]</span>
+              <span class="blue">]0.5 - 0.7]</span>
+              <span class="yellow">]0.7 - 0.9]</span>
+              <span class="purple">]0.9 - 1.0]</span>
+            </div>
+            <div>
+              <span><b>Deteção de Agentes: </b></span>
+              <span class="darkblue" style="padding-left: 2px; padding-right: 2px">Entidade Detetada</span>
+              <span><i> (Clique para abrir a respetiva página)</i></span>
+            </div>
+            <mat-slide-toggle class="normal-toggle afterAnnotated" color="primary" [checked]="true" (click)="toggleEntities()">Entidades</mat-slide-toggle>
+            <br>
+            <mat-slide-toggle class="normal-toggle afterAnnotated" color="primary" [checked]="false" (click)="toggleKeywords()">Palavras-chave</mat-slide-toggle>
+            <br>
+            <mat-slide-toggle class="normal-toggle afterAnnotated" color="primary" [checked]="false" [disabled]="datasetFixed.length == datasetFixed2.length" (click)="toggleRel()">Datas menos relevantes</mat-slide-toggle>
+            <div class="clipboard">
+              <a *ngIf="options" color="primary" href="/"><button type="reset" class="btn btn-link">Go back</button></a>
+              <button *ngIf="options" color="primary" type="submit" (click)="copyToClipboard($event)" class="btn btn-primary rounded"><i class="fas fa-clone"></i>&nbsp;&nbsp; Copiar para Clipboard</button>
+            </div>
+            <!--
+            <ng-template #multiple>
+              <p><i>Sumário gerado automaticamente com os 5 melhores resultados</i></p>
+              <hr>
+              <table class="table table-borderless">
+                <tbody *ngFor="let item of summary">
+                <tr>
+                  <td class="TabelaTexto" [innerHTML]="item"></td>
+                </tr>
+                </tbody>
+              </table>
+              <div class="clipboardMultiple">
+                <a *ngIf="options" color="primary" href="/"><button type="reset" class="btn btn-link">Go back</button></a>
+                <button *ngIf="options" color="primary"  type="submit" (click)="copyToClipboard($event)" class="btn btn-primary rounded"><i class="fas fa-clone"></i>&nbsp;&nbsp; Copy to Clipboard</button>
+              </div>
+            </ng-template>
+            -->
+          </mat-tab>
+
+          <!-- DETEÇÃO DE AGENTES -->
+          <mat-tab class="label" label="Deteção de Agentes">
+            <app-agent-detection [errorWikifier]="errorWikifier" [queryType]="queryType" [text]="options.result.TextNormalized" [summary]="summary" [wiki]="wiki"></app-agent-detection>
+          </mat-tab>
+
+          <!-- STORYLINE -->
+          <mat-tab class="label" label="Storyline" *ngIf="dataset.length > 0 && options.result" style="overflow: hidden">
+            <app-storyline [queryType]="queryType" [compGeral]="options.result" [docSen]="options.score=='doc'" [allArgs]="datasetFixed" [relArgs]="datasetFixed2"></app-storyline>
+          </mat-tab>
+
+          <!-- TEMPORAL CLUSTERING -->
+          <mat-tab class="label" label="Agrupamento Temporal" *ngIf="dataset.length > 0">
+            <br>
+            <div class="relToggle">
+              <mat-slide-toggle [disabled]="datasetFixed.length == datasetFixed2.length" [checked]="false" (click)='toggleRel()' class="afterAnnotated" color="primary" >Datas menos relevantes</mat-slide-toggle>
+            </div>
+
+            <br><br><br><br>
+
+            <div *ngIf="!showOnlyRel else onlyRel">
+              <div style="margin-top:-80px;" *ngIf="datasetFixed.length > 0 else nodata1">
+                <div class="timeline">
+                  <div *ngFor="let item of df">
+                    <div class="timeline__event timeline__event--type1">
+                      <div class="timeline__event__date">
+                      <span style="white-space: pre-line">
+                        <h3 style="color: #B4D5FF; font-size: 20px; text-align: center;">{{item.date}}</h3>
+                        <h3 style="font-size: 22px; text-align: center; line-height: 45px"><b><strong>{{item.score}}</strong></b></h3>
+                      </span>
+                      </div>
+                      <div class="timeline__event__content ">
+                        <div class="timeline__event__title">
+                          {{item.score}}
+                        </div>
+                        <div class="timeline__event__description">
+                          <p [innerHTML]="item.text"></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <ng-template #nodata1>
+                <h1>Não foram encontrados dados, em caso de dúvida, a culpa é da API</h1>
+              </ng-template>
+            </div>
+
+            <ng-template #onlyRel>
+              <div style="margin-top:-80px;" *ngIf="datasetFixed2.length > 0 else nodata2">
+                <div class="timeline">
+                  <div *ngFor="let item of df2">
+                    <div class="timeline__event timeline__event--type1">
+                      <div class="timeline__event__date">
+                      <span style="white-space: pre-line">
+                        <h3 style="color: #B4D5FF; font-size: 24px; text-align: center; padding-top: 20px">{{item.date}}</h3>
+                        <!--<h3 style="font-size: 22px; text-align: center; line-height: 45px" [innerHTML]="item.score"></h3>-->
+                      </span>
+                      </div>
+                      <div class="timeline__event__content ">
+                        <div class="timeline__event__title">
+                          <p [innerHTML]="item.score"></p>
+                        </div>
+                        <div class="timeline__event__description">
+                          <p [innerHTML]="item.text"></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <ng-template #nodata2>
+                <h1 style="text-align: center">Não foram encontrados dados</h1>
+              </ng-template>
+            </ng-template>
+          </mat-tab>
+
+          <!-- WORDCLOUD -->
+          <mat-tab class="label" label="Nuvem de Palavras">
+            <app-wordcloud [args]="options.result" [queryType]="queryType" [multidocFiles]="multidocFiles"></app-wordcloud>
+          </mat-tab>
+        </div>
+
+        <div *ngIf="queryType == 'multiple'">
+          <!-- STORYLINE -->
+          <mat-tab class="label" label="Storyline" style="overflow: hidden">
+            <app-storyline [queryType]="queryType" [multidocFiles]="multidocScores" [compGeral]="options.result" [docSen]="options.score=='doc'" [query]="inpMultiple" [topTen]="topTen"></app-storyline>
+          </mat-tab>
+
+          <!-- DETEÇÃO DE AGENTES -->
+          <mat-tab class="label" label="Deteção de Agentes">
+            <app-agent-detection [queryType]="queryType" [text]="options.result.TextNormalized" [summary]="summary" [wiki]="wiki"></app-agent-detection>
+          </mat-tab>
+
+          <!-- RESULTADOS -->
+          <mat-tab class="label" label="Resultados">
+            <br>
+            <div style="position: relative; margin: auto; text-align: center">
+              <span><b>Ordenação de Resultados:</b></span>
+              <br>
+              <mat-label class="mat-slide-toggle-content">Por Scores&nbsp;&nbsp;</mat-label>
+              <mat-slide-toggle class="date-score-toggle" (click)="changeSortToggle()" [checked]="false" color="primary">Por Datas</mat-slide-toggle>
+              <mat-label class="mat-slide-toggle-content">&nbsp;</mat-label>
+            </div>
+            <br>
+            <hr>
+            <div *ngFor="let item of multidocSpliced">
+              <div class="timematters-button">
+                <button mat-fab (click)="startSingleNarr(item.url)" class="btn-tm btn btn-primary" title="Criar narrativa para este arquivo"><i class="fas fa-solid fa-book-open fa-xs"></i></button>
+              </div>
+              <h1 class="result_title" (click)="openArquivo(item.url)">{{item.title}}</h1>
+              <span>{{item.snippet}}</span>
+              <div style="position: fixed; right: 10px">
+                <span *ngIf="sortBy == 'scores'" class="result_score">Score: [{{item.tempScores[0]}}]</span>
+              </div>
+              <br>
+              <div class="resDate">
+                <span *ngFor="let date of item.tempExpressions.slice(0,5); let i = index; let l = count" class="result_date">{{date}}
+                  <span *ngIf="l > 1 && i != l - 1"> &bull; </span>
+                <span *ngIf="l == 5 && i == l - 1">&nbsp;...</span>
+              </span>
+              </div>
+              <hr>
+            </div>
+
+            <!--<app-results [score]="options.score" [args]="options.result" [sortBy]="sortBy" [entitiesMatter]="withEntities" [multidocDates]="multidocDates" [multidocScores]="multidocScores" [wiki]="wiki"></app-results>-->
+            <div class="related" *ngIf="!loadingRelated && related?.length > 0">
+              <br>
+              <div class="row">
+                <div class="col-md-2" *ngFor="let item of related.slice(0,5)">
+                  <div class="card card-1">
+                    <h3>{{item}}</h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </mat-tab>
+
+          <!-- WORDCLOUD -->
+          <mat-tab class="label" label="Nuvem de Palavras">
+            <app-wordcloud [args]="options.result" [queryType]="queryType" [multidocFiles]="multidocFiles" [topTen]="topTen"></app-wordcloud>
+          </mat-tab>
+        </div>
+      </mat-tab-group>
+    </mat-card>
+    <br>
+  </ng-template>
+</div>
+
+<div class="go-back">
+  <button mat-fab (click)="goBack()" class="btn btn-primary" title="Retroceder para a página inicial"><i class="fas fa-undo-alt"></i></button>
+</div>
+
+<!-- SINGLE NARRATIVE -->
+<div *ngIf="singleNarr" class="singleOverlay fade-in">
+  <button (click)="endSingleDoc()" class="close">✖</button>
+  <!-- RESULTS -->
+  <div *ngIf="finishSingleNarr && !loadingSingleNarr" class="results my-col2" style="overflow-x: hidden">
+    <mat-card class="cardQuery2" style="background-color: #f7f7f7; border: none !important;">
+      <mat-tab-group class="mat-elevation-z0" mat-align-tabs="center" dynamicHeight>
+        <!-- ANNOTATED TEXT-->
+        <mat-tab class="label" label="Texto Anotado">
+          <br>
+          <p>URL: <u><a class="linkDoMal" href="{{urlSingleNarr}}" target="_blank">{{urlSingleNarr}}</a></u></p>
+          <hr>
+          <app-frame [freeText]="false" [errorWikifier]="errorWikifierSingleNarr" [score]="options.score" [args]="options.result" [showOnlyRelevants]="showOnlyRel" [keywordsMatter]="withKeywords" [entitiesMatter]="withEntities" [wiki]="wikiSingleNarr" [dbpedia]="dbpediaSingleNarr" class="result"></app-frame>
+          <hr>
+          <div class="dateScoreColors">
+            <span><b>Escala Likert de <i>{{!showOnlyRel?"5": "3"}}</i> cores para representar a importância das expressões temporais: </b></span>
+            <span class='{{!showOnlyRel?"black": "nonviewable"}}'>[0 - 0.35]</span>
+            <span class='{{!showOnlyRel?"green": "nonviewable"}}'>]0.35 - 0.5]</span>
+            <span class="blue">]0.5 - 0.7]</span>
+            <span class="yellow">]0.7 - 0.9]</span>
+            <span class="purple">]0.9 - 1.0]</span>
+          </div>
+          <div>
+            <span><b>Deteção de Agentes: </b></span>
+            <span class="darkblue" style="padding-left: 2px; padding-right: 2px">Entidade Detetada</span>
+            <span><i> (Clique para abrir a respetiva página)</i></span>
+          </div>
+          <mat-slide-toggle class="normal-toggle afterAnnotated" color="primary" [checked]="true" (click)="toggleEntities()">Entidades</mat-slide-toggle>
+          <br>
+          <mat-slide-toggle class="normal-toggle afterAnnotated" color="primary" [checked]="false" (click)="toggleKeywords()">Palavras-chave</mat-slide-toggle>
+          <br>
+          <mat-slide-toggle class="normal-toggle afterAnnotated" color="primary" [checked]="false" [disabled]="datasetFixed.length == datasetFixed2.length" (click)="toggleRel()">Datas menos relevantes</mat-slide-toggle>
+          <div class="clipboard">
+            <a *ngIf="options" color="primary" href="/"><button type="reset" class="btn btn-link">Go back</button></a>
+            <button *ngIf="options" color="primary" type="submit" (click)="copyToClipboard($event)" class="btn btn-primary rounded"><i class="fas fa-clone"></i>&nbsp;&nbsp; Copiar para Clipboard</button>
+          </div>
+        </mat-tab>
+
+        <!-- DETEÇÃO DE AGENTES -->
+        <mat-tab class="label" label="Deteção de Agentes">
+          <app-agent-detection [errorWikifier]="errorWikifierSingleNarr" [queryType]="'single'" [text]="options.result.TextNormalized" [summary]="summary" [wiki]="wikiSingleNarr"></app-agent-detection>
+        </mat-tab>
+
+        <!-- STORYLINE -->
+        <mat-tab class="label" label="Storyline" *ngIf="dataset.length > 0 && options.result" style="overflow: hidden">
+          <app-storyline [queryType]="'single'" [compGeral]="options.result" [docSen]="options.score=='doc'" [allArgs]="datasetFixed" [relArgs]="datasetFixed2"></app-storyline>
+        </mat-tab>
+
+        <!-- TEMPORAL CLUSTERING -->
+        <mat-tab class="label" label="Agrupamento Temporal" *ngIf="dataset.length > 0">
+          <br>
+          <div class="relToggle">
+            <mat-slide-toggle [disabled]="datasetFixed.length == datasetFixed2.length" [checked]="false" (click)='toggleRel()' class="afterAnnotated" color="primary" >Datas menos relevantes</mat-slide-toggle>
+          </div>
+
+          <br><br><br><br>
+
+          <div *ngIf="!showOnlyRel else onlyRel">
+            <div style="margin-top:-80px;" *ngIf="datasetFixed.length > 0 else nodata1">
+              <div class="timeline">
+                <div *ngFor="let item of df">
+                  <div class="timeline__event timeline__event--type1">
+                    <div class="timeline__event__date">
+                      <span style="white-space: pre-line">
+                        <h3 style="color: #B4D5FF; font-size: 20px; text-align: center;">{{item.date}}</h3>
+                        <h3 style="font-size: 22px; text-align: center; line-height: 45px"><b><strong>{{item.score}}</strong></b></h3>
+                      </span>
+                    </div>
+                    <div class="timeline__event__content ">
+                      <div class="timeline__event__title">
+                        {{item.score}}
+                      </div>
+                      <div class="timeline__event__description">
+                        <p [innerHTML]="item.text"></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <ng-template #nodata1>
+              <h1>Não foram encontrados dados, em caso de dúvida, a culpa é da API</h1>
+            </ng-template>
+          </div>
+
+          <ng-template #onlyRel>
+            <div style="margin-top:-80px;" *ngIf="datasetFixed2.length > 0 else nodata2">
+              <div class="timeline">
+                <div *ngFor="let item of df2">
+                  <div class="timeline__event timeline__event--type1">
+                    <div class="timeline__event__date">
+                      <span style="white-space: pre-line">
+                        <h3 style="color: #B4D5FF; font-size: 24px; text-align: center; padding-top: 20px">{{item.date}}</h3>
+                        <!--<h3 style="font-size: 22px; text-align: center; line-height: 45px" [innerHTML]="item.score"></h3>-->
+                      </span>
+                    </div>
+                    <div class="timeline__event__content ">
+                      <div class="timeline__event__title">
+                        <p [innerHTML]="item.score"></p>
+                      </div>
+                      <div class="timeline__event__description">
+                        <p [innerHTML]="item.text"></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <ng-template #nodata2>
+              <h1 style="text-align: center">Não foram encontrados dados</h1>
+            </ng-template>
+          </ng-template>
+        </mat-tab>
+
+        <!-- WORDCLOUD -->
+        <mat-tab class="label" label="Nuvem de Palavras">
+          <app-wordcloud [args]="options.result" [queryType]="'single'" [multidocFiles]="multidocFiles"></app-wordcloud>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card>
+    <br>
+  </div>
+
+  <!-- LOADING SCREEN -->
+  <div *ngIf="loadingSingleNarr">
+    <div class="loaderText">
+      <h2 style="color: black; text-align: center; margin: 0 auto;">A carregar a narrativa para o URL</h2>
+      <!--
+      <br><br>
+      <h3 style="color: black; text-align: center; margin: 0 auto; max-width: 90%"><i class="darkblue" style="line-height: 200%; padding: 10px 12px 10px 10px; border-radius: 10px 10px 10px 10px;">{{urlSingleNarr}}</i></h3>
+      -->
+      <br><br><br><br>
+    </div>
+    <div class="loader">
+      <img src="../../assets/loading2.gif" style="width: 150px" alt="Loading"/>
+      <br><br><br>
+      <h3 style="color: black; text-align: center; margin: 0 auto;">Por favor aguarde...</h3>
+    </div>
+  </div>
+
+  <!-- ERROR SCREEN -->
+  <div *ngIf="errorSingleNarr && !loadingSingleNarr">
+    <div style="position: absolute; top: 20%; width: 100%;">
+      <h2 style="position: absolute; left: 49.5%; transform: translate(-50%, -50%); text-align: center; color: black; font-size: 43px; font-family: 'Teko', sans-serif;">
+        ERRO
+      </h2>
+      <a href="./" style="position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%)">
+        <img style="width: 100px" src="../../assets/narrArquivo_Logo.png"  alt="narrArquivo"/>
+      </a>
+      <br><br><br><br><br><br><br><br><br>
+      <h2 style="text-align: center; color: black; font-size: 23px">
+        Não foi possivel criar uma narrativa para a Query ou URL introduzido"
+      </h2>
+      <div class="errordiv">
+        <a href="/" class="errorbutton">INÍCIO</a>
+      </div>
+      <br><br><br><br><br><br>
+      <h2 style="position: absolute; left: 49.5%; transform: translate(-50%, -50%); text-align: center; font-size: 18px; color: black">
+        Tente novamente
+      </h2>
+    </div>
+  </div>
+</div>

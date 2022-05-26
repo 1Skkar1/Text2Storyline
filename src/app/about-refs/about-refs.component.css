@@ -1,0 +1,115 @@
+.banner {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+  height: 8%;
+  background-color: rgba(3, 63, 114, 1);
+}
+
+.menu-item {
+  color: white;
+  background-color: #033F72;
+  font-family: 'Work Sans', sans-serif;
+  font-size: 14px;
+}
+
+.nav-button {
+  position: sticky;
+  background-color: #033F72;
+  color: white;
+  font-family: 'Work Sans', sans-serif;
+  border-color: transparent;
+}
+
+.nav-button:hover {
+  background-color: #023969;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-left: -50px;
+  background-color: #033F72;
+  color: white !important;
+}
+
+.dropdown-item {
+  font-weight: lighter;
+  cursor: pointer !important;
+}
+
+.dropdown-item:hover {
+  background-color: #023969;
+  color: white !important;
+  cursor: pointer !important;
+}
+
+.fundo {
+  background-color: #f3f5f7;
+  padding-top: 20px;
+}
+
+.jumbotron {
+  background: linear-gradient(to bottom, rgba(0,64,107,0.5) 0%,rgba(0,64,107,0.89) 100%);
+}
+
+.miniText {
+  font-size: 35px;
+  font-family: "Nexa Bold", cursive ;
+  margin-bottom: 0;
+  color: #ffffff;
+  background-color: #033F72;
+  padding-left: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.miniText2 {
+  font-size: 17px;
+  font-family: 'Work Sans', sans-serif;
+  margin-bottom: 0;
+  color: #ffffff;
+  background-color: #033F72;
+  padding-left: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.text {
+  color: #ffffff;
+  font-size: 30px;
+}
+
+.p1 {
+  color:#000;
+  font-size: 15px;
+  text-align: justify;
+  padding-top: 15px;
+  padding-left: 14px;
+}
+
+.p2 {
+  color: #000;
+  font-size: 15px;
+  text-align: justify;
+  padding-top: 15px;
+  padding-left: 30px;
+}
+
+.cardSmall{
+  margin-right: 15px;
+  margin-bottom: 17px;
+}
+
+.example-card {
+  max-width:  150px;
+  max-height: 110px;
+  padding:5px;
+
+}
+hr {
+  border-top: 1px solid grey;
+}
+

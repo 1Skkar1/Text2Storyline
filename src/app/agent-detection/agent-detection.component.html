@@ -1,0 +1,82 @@
+<div class='{{loading?"viewable": "nonviewable"}}'>
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</div>
+<br/>
+<br/>
+<div class='{{loading?"viewable": "nonviewable"}}'>
+  <div class="d-flex justify-content-center">
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </div>
+</div>
+
+<div *ngIf="!loading && !error && wikiData.length > 4" class="narratives justify-content-center">
+  <div *ngFor="let item of wikiData" (click)="openWikiLink(item.url)">
+    <div class="cards d-flex justify-content-center">
+      <div class="card__image" style="background: url('{{ item.image }}') center / cover no-repeat;">
+      </div>
+      <div class="card__body">
+        <div class="card__items--inline">
+          <div class="card__title text--bold">{{ item.title }}</div>
+        </div>
+        <div class="card__items--inline">
+          <div class="rating">
+            <div class="rating__icon">
+              <i class="fas fa-id-badge"></i>
+            </div>
+            <div class="rating__value">{{ item.class }}</div>
+          </div>
+        </div>
+        <div class="card__description">
+          <hr/>
+          <p style="flex-wrap: nowrap; font-size: 14px; text-align: center; text-justify: inter-character;">
+            {{ item.text }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="!loading && !error && wikiData.length <= 4" class="narratives d-flex justify-content-center">
+  <div *ngFor="let item of wikiData" (click)="openWikiLink(item.url)">
+    <div class="cards d-flex justify-content-center">
+      <div class="card__image" style="background: url('{{ item.image }}') center / cover no-repeat;">
+      </div>
+      <div class="card__body">
+        <div class="card__items--inline">
+          <div class="card__title text--bold">{{ item.title }}</div>
+        </div>
+        <div class="card__items--inline">
+          <div class="rating">
+            <div class="rating__icon">
+              <i class="fas fa-id-badge"></i>
+            </div>
+            <div class="rating__value">{{ item.class }}</div>
+          </div>
+        </div>
+        <div class="card__description">
+          <hr/>
+          <p style="flex-wrap: nowrap; font-size: 14px; text-align: center; text-justify: inter-character;">
+            {{ item.text }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="!loading && error">
+  <h2 style="color: black; text-align: center">Não foi possível detetar Agentes para {{queryType == "single" ? "o URL introduzido" : "a query introduzida"}}</h2>
+  <a href="./" style="display: flex; justify-content: center;">
+    <img style="width: 100px" src="../../assets/narrArquivo_Logo.png"  alt="narrArquivo"/>
+  </a>
+  <h3 style="color: black; text-align: center">Por favor tente novamente</h3>
+</div>
+
+<div *ngIf="!loading && wikiEmpty">
+  <h2 style="color: black; text-align: center">Não existem entidades para {{queryType == "single" ? "o URL introduzido" : "a query introduzida"}}</h2>
+  <a href="./" style="display: flex; justify-content: center;">
+    <img style="width: 100px" src="../../assets/narrArquivo_Logo.png"  alt="narrArquivo"/>
+  </a>
+</div>
+

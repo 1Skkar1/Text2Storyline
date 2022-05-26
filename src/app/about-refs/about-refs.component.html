@@ -1,0 +1,83 @@
+<nav class="mat-elevation-z0 navbar navbar-expand-lg banner">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/" id="bannerLogo">
+      <img src="../../assets/narrArquivo_TextWhite.png" style="height:30px" alt="narrArquivo">
+    </a>
+    <div style="position: fixed; right: 10px">
+      <button class="dropdown-toggle nav-button" id="dropdownMenuButton" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Sobre
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item" routerLink="../equipa"><i class="fas fa-user-circle"></i> Equipa</a>
+        <a class="dropdown-item" routerLink="../referencias"><i class="fas fa-book-open"></i> Referências</a>
+        <a class="dropdown-item" target="_blank" href="https://github.com/liaad/time-matters"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a>
+        <a class="dropdown-item" (click)="openDialog()"><i class="fas fa-video" aria-hidden="true"></i> Video</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div style="top: 10%; position: absolute; display: flex; justify-content: center; flex-wrap: wrap;">
+  <div style="display: flex; justify-content: center;" class="col-md-11 col-sm-8 col-xs-6">
+    <mat-card>
+      <div class="sobreTitulo">
+        Referências académicas
+      </div>
+      <mat-divider></mat-divider>
+      <mat-list style="padding-right: 10px">
+        <p class="p1">
+          Este projeto foi desenvolvido por investigadores afiliados ao Instituto Politécnico de Tomar, Ci2 - Centro de Investigação em Cidades Inteligentes, INESC TEC, Universidade do Porto, Universidade de Caën, Universidade da Beira Interior, Centro de Matemática e Aplicações (CMA – UBI) e Centro de Matemática e Aplicações (CMA), FCT Nova.
+          Este projeto faz uso do <a class="naoBranco" target="_blank" href="https://wikifier.org/"> <b>Wikifier</b> </a> para a deteção das entidades e mapeamento com a respetiva página da Wikipedia.
+        </p>
+        <p class="p1">
+          Referências Bibliográficas: </p>
+        <p class="p1">
+          &bull; Campos, R., Duque, J., Jorge, A., Dias, G., Nunes, C., (2021). Narrarquivo. Memória Descritiva. Prémio Arquivo.pt 2021. <a class="naoBranco" target="_blank" href="https://www.ccc.ipt.pt/~ricardo/ficheiros/narrarquivo.pdf"> <b>[pdf]</b> </a>
+        </p>
+        <p class="p1">
+          &bull; Campos, R., Duque, J., Cândido, T., Mendes, J., Dias, G., Jorge, A., Nunes, C., (2021). Time-Matters: Temporal Unfolding of Texts. In: Hiemstra D., Moens M-F., Mothe J., Perego R., Potthast M., Sebastiani F. (eds), Advances in Information Retrieval. ECIR'21 (Lucca, Italy. March 28 - April 1). Lecture Notes in Computer Science, vol 12657, pp. 492 - 497. Springer. <a class="naoBranco"  href="https://link.springer.com/chapter/10.1007/978-3-030-72240-1_53" target="_blank"><b>[pdf]</b></a><a  class="naoBranco" target ="_blank"href="https://youtu.be/Q8yT4aVM_Mw"><b> [video]</b></a> <a class="naoBranco"  target="_blank" href="https://www.ccc.ipt.pt/~ricardo/ficheiros/ECIR2021Poster.pdf"><b> [poster]</b></a>
+        </p>
+        <p class="p1">
+          &bull; Campos, R., Dias, G., Jorge, A., Nunes, C. (2017). Identifying Top Relevant Dates for Implicit Time Sensitive Queries. In Information Retrieval Journal. Springer, Vol 20(4), pp 363-398. <a class="naoBranco" target="_blank" href="https://link.springer.com/article/10.1007/s10791-017-9302-1"> <b>[pdf]</b> </a>
+        </p>
+        <p class="p1">
+          &bull; Janez Brank, Gregor Leban, Marko Grobelnik. Annotating Documents with Relevant Wikipedia Concepts. Proceedings of the Slovenian Conference on Data Mining and Data Warehouses (SiKDD 2017), Ljubljana, Slovenia, 9 October 2017. <a class="naoBranco" target="_blank" href="https://pdfs.semanticscholar.org/84f0/024bfa6ef18a30453d13a2b110e9b088d449.pdf"> <b>[pdf]</b> </a>
+        </p>
+      </mat-list>
+    </mat-card>
+  </div>
+</div>
+
+<br>
+<br>
+
+<div style="top:70%; position: absolute; display: flex; justify-content: center; flex-wrap: wrap;">
+  <div style="display:flex; justify-content: center;" class="col-md-11 col-sm-8 col-xs-6">
+    <mat-card>
+      <div class="sobreTitulo">
+        Agradecimentos
+      </div>
+      <mat-divider></mat-divider>
+      <p class="p1" style="padding-right: 10px">Ricardo Campos e Alípio Jorge foram financiados pelo FEDER - Fundo Europeu de Desenvolvimento Regional através do Programa Operacional Regional do Norte de Portugal (NORTE 2020), no âmbito do PORTUGAL 2020 e por Fundos Nacionais através da agência de financiamento portuguesa FCT - Fundação para a Ciência e a Tecnologia ao abrigo do projeto PTDC/CCI-COM/31857/2017 (NORTE-01-0145-FEDER-03185). Este financiamento enquadra-se na linha de pesquisa do projeto Text2Story <u><b><a class="naoBranco" target="_blank" href="https://text2story.inesctec.pt/">(https://text2story.inesctec.pt/)</a></b></u>. Célia Nunes foi financiada pela Fundação para a Ciência e a Tecnologia ao abrigo dos projetos UIDB/00212/2020.</p>
+      <br>
+      <br>
+      <div style="display: flex;justify-content: space-evenly;flex-wrap:  wrap;margin-right: 5px;margin-left: 5px;">
+        <a class="example-card cardSmall" *ngFor="let item of data1" target="_blank" href="{{item.link}}">
+          <img mat-card-image class="example-card fotoCard"  src="../../assets/{{item.bigPic}}" alt="{{item.title}}">
+        </a>
+      </div>
+      <br>
+      <mat-divider></mat-divider><br><br><br>
+      <div style="display: flex;justify-content: space-evenly;flex-wrap:wrap;margin-right: 5px;">
+        <div style="margin-right: 6px;" *ngFor="let item of data2">
+          <a class="example-card cardSmall"  target="_blank" href="{{item.link}}">
+            <img mat-card-image  class="example-card fotoCard"  src="../../assets/{{item.bigPic}}" alt="{{item.title}}">
+          </a>
+        </div>
+      </div>
+    </mat-card>
+  </div></div>
+<br>
+<br>
+<br>
+<br>

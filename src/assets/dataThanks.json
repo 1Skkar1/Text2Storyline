@@ -1,0 +1,63 @@
+{"data1":[
+  {
+	"bigPic": "IPT.jpg",
+	"title":"IPT",
+  	"link":"http://www.ipt.pt"
+},
+{
+	"bigPic": "CI2.jpg",
+	"title":"CI2",
+	"link":"http://www.ci2.ipt.pt/"
+},
+{
+	"bigPic": "INESCTEC.jpg",
+	"title":"INESCTEC",
+  "link":"https://www.inesctec.pt/"
+},
+{
+	"bigPic": "UP.jpg",
+	"title":"UP ",
+  "link":"https://sigarra.up.pt/up/pt/web_base.gera_pagina?p_pagina=fcup"
+},
+{
+	"bigPic": "UniCaen.jpg",
+	"title":"UniCaen",
+  "link":"https://www.unicaen.fr/"
+},
+{
+	"bigPic": "UBI.jpg",
+	"title":"UBI",
+  "link":"http://www.ubi.pt"
+}
+
+
+],
+"data2":[
+
+{
+	"bigPic": "UE.png",
+	"title":"UE",
+  	"link":"https://ec.europa.eu/regional_policy/pt/funding/erdf/"
+},
+{
+	"bigPic": "logo_fct.png",
+	"title":"FCT",
+  	"link":"https://www.fct.pt/"
+},
+{
+	"bigPic": "humaneAI.png",
+	"title":"HumaneAI",
+  	"link":"https://www.humane-ai.eu/"
+},
+{
+	"bigPic": "norte2020.png",
+	"title":"Norte2020",
+  	"link":"https://www.norte2020.pt/"
+},
+{
+	"bigPic": "portugal2020.png",
+	"title":"Portugal2020",
+  	"link":"https://www.portugal2020.pt/"
+}]
+}
+

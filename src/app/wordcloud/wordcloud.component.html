@@ -1,0 +1,21 @@
+<div class='{{loading?"viewable": "nonviewable"}}'>
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</div>
+<br/>
+<br/>
+<div class='{{loading?"viewable": "nonviewable"}}'>
+  <div class="d-flex justify-content-center">
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </div>
+</div>
+<div *ngIf="!loading && !error" class="wordcloud">
+  <img class="wordPic" [src]="wordcloud" alt="WordCloud">
+</div>
+<div *ngIf="!loading && error">
+  <h2 style="color: black; text-align: center">Não foi possível obter a Nuvem de Palavras para {{queryType == "single" ? "o URL introduzido" : "a query introduzida"}}</h2>
+  <a href="./" style="display: flex; justify-content: center;">
+    <img style="width: 100px" src="../../assets/narrArquivo_Logo.png"  alt="narrArquivo"/>
+  </a>
+  <h3 style="color: black; text-align: center">Por favor tente novamente</h3>
+</div>
+<br>

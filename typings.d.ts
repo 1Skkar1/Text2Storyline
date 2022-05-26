@@ -1,0 +1,1 @@
+declare const getGoogleTrends: any;

@@ -1,0 +1,63 @@
+<nav class="mat-elevation-z0 navbar navbar-expand-lg banner">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/" id="bannerLogo">
+      <img src="../../assets/narrArquivo_TextWhite.png" style="height:30px" alt="narrArquivo">
+    </a>
+    <div style="position: fixed; right: 10px">
+      <button class="dropdown-toggle nav-button" id="dropdownMenuButton" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Sobre
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item" routerLink="../equipa"><i class="fas fa-user-circle"></i> Equipa</a>
+        <a class="dropdown-item" routerLink="../referencias"><i class="fas fa-book-open"></i> Referências</a>
+        <a class="dropdown-item" target="_blank" href="https://github.com/liaad/time-matters"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a>
+        <a class="dropdown-item" (click)="openDialog()"><i class="fas fa-video" aria-hidden="true"></i> Video</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div style="top: 10%; position: relative; display: flex; justify-content: center; flex-wrap: wrap; margin: auto">
+  <div style="display:flex; justify-content: center;" class="col-md-11 col-sm-8 col-xs-6">
+    <mat-card>
+      <div class="sobreTitulo">
+        Equipa
+      </div>
+      <mat-divider></mat-divider>
+      <mat-list style="margin-right: -55px">
+        <p class="p1">
+          Esta plataforma foi desenvolvida por Ricardo Campos, docente do Instituto Politécnico de Tomar (IPT) e investigador do INESC TEC e do Ci2 - Centro de Investigação em Cidades Inteligentes, Francisco Gonçalves, aluno da Faculdade de Ciências da Universidade do Porto (FCUP), Jorge Duque, aluno do Instituto Politécnico de Tomar (IPT), Alípio Jorge, docente na Faculdade de Ciências da Universidade do Porto (UP) e coordenador do LIAAD INESC TEC, Gaël Dias, docente da Universidade de Caën, e Célia Nunes, docente da Universidade da Beira Interior (UBI), investigadora do Centro de Matemática e Aplicações (CMA – UBI) e colaboradora do Centro de Matemática e Aplicações (CMA), FCT Nova.
+        </p>
+        <p class="p1">
+          O logótipo do narrArquivo foi desenvolvido por Rúben Marques Pedro, designer de produto e gráfico. Parte do seu portofólio pode ser visto em: <a href="https://www.coroflot.com/ruben_m_pedro" class="naoBranco"  target="_blank">Ruben Marques Pedro, Product & Graphic Designer in Porto, Portugal</a>.
+        </p>
+        <p class="p1">
+          Uma versão preliminar do narrarquivo, denominada time-matters, contou com a participação do aluno <a target="_blank" class="naoBranco" href="https://www.linkedin.com/in/tiago-c%C3%A2ndido-4590951a8/">Tiago Cândido</a>. A versão python do pacote de software Time-Matters foi desenvolvida pelo aluno <a class="naoBranco" target="_blank" href="https://www.linkedin.com/in/jorge-mendes-75733815a/">Jorge Mendes</a>.
+        </p>
+      </mat-list>
+      <br>
+      <mat-divider></mat-divider><br>
+      <div style="display: flex;justify-content: center;flex-wrap: wrap;">
+        <div style="margin-left: 30px;margin-right: 30px; display: flex;justify-content:space-evenly;flex-direction: column;align-items: center;" *ngFor="let item of data" >
+          <img  class="fotoCard"  src="../../assets/{{item.bigPic}}" alt="{{item.firstName}} {{item.lastName}}">
+
+          <div style="color:#000;margin-top: 10px;font-size: 16pt; justify-content: center;text-align: center;">
+            {{item.firstName}} {{item.lastName}}<br>
+            <ul class="wrapper">
+              <li class="icon linked-in">
+                <a target="_blank" href="{{item.linkLinkedIn}}"><i class="fab fa-linkedin"></i></a>
+              </li>
+              <li class="icon website">
+                <a target="_blank" href="{{item.linkWebsite}}"><i class="fas fa-globe-americas"></i></a>
+              </li>
+              <li class="icon email">
+                <a target="_blank" href="{{item.linkEmail}}"><i class="far fa-envelope"></i></a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+

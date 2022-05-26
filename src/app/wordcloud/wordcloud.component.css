@@ -1,0 +1,13 @@
+.wordcloud{
+  width: 100%;
+  z-index: 30;
+}
+
+.wordPic {
+  display:block;
+  margin:auto;
+  width: 90%;
+  min-width: 250px;
+  max-width: 1000px;
+  border-radius: 10px;
+}

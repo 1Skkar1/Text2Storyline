@@ -1,0 +1,37 @@
+<!--
+<div class="banner" >
+  <br> <br>
+  <a href="./">
+    <img style="width: 45px" src="../../assets/narrArquivo_Logo.png" />
+    <img style="width: 165px; height: 30px" src="../../assets/narrArquivo_TextWhite.png"/>
+  </a>
+</div>
+
+<nav class="mat-elevation-z0 navbar navbar-expand-lg banner">
+  <a class="navbar-brand" href="/" id="bannerLogo" style="display: none">
+    <img src="../../assets/narrArquivo_TextWhite.png" style="height:30px" alt="narrArquivo">
+  </a>
+  <div class="container-fluid" style="width: 100%">
+    <div class="navbar-collapse menu-item" id="navbarContent">
+      <div style="left: 1px">
+        <button aria-checked="true" class="nav-button" (click)="changeNarrToggle()">
+          <i class="fas fa-book-open"></i>
+          <span id="narrTextToggle"> Narrativa</span>
+        </button>
+      </div>
+    </div>
+    <div style="position: relative; right: 1px">
+      <button class="dropdown-toggle nav-button" id="dropdownMenuButton" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Sobre
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item" routerLink="sobre/equipa"><i class="fas fa-user-circle"></i> Equipa</a>
+        <a class="dropdown-item" routerLink="sobre/referencias"><i class="fas fa-book-open"></i> Referências</a>
+        <a class="dropdown-item" target="_blank" href="https://github.com/liaad/time-matters"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a>
+        <a class="dropdown-item" (click)="openDialog()"><i class="fas fa-video" aria-hidden="true"></i> Video</a>
+      </div>
+    </div>
+  </div>
+</nav>
+-->
+<app-docsquery></app-docsquery>

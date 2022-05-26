@@ -1,0 +1,77 @@
+.banner {
+  position: fixed;
+  width: 100%;
+  z-index: 1000;
+  height: 8%;
+  background-color: rgba(3, 63, 114, 1);
+}
+
+.footer {
+  position: absolute;
+  top: 250vh;
+}
+
+.menu-item {
+  color: white;
+  background-color: #033F72;
+  font-family: 'Work Sans', sans-serif;
+  font-size: 14px;
+}
+
+.nav-button {
+  position: sticky;
+  background-color: #033F72;
+  color: white;
+  font-family: 'Work Sans', sans-serif;
+  border-color: transparent;
+}
+
+.nav-button:hover {
+  background-color: #023969;
+}
+
+[aria-checked='true'] {
+  background-color: #2d5177;
+}
+
+#home {
+  float: left;
+}
+
+#about {
+  position: relative;
+  float: right;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-left: -50px;
+  background-color: #033F72;
+  color: white !important;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-left: -50px;
+  background-color: #033F72;
+  color: white !important;
+}
+
+.dropdown-item {
+  font-weight: lighter;
+}
+
+.dropdown-item {
+  font-weight: lighter;
+  cursor: pointer !important;
+}
+
+.dropdown-item:hover {
+  background-color: #023969;
+  color: white !important;
+  cursor: pointer !important;
+}

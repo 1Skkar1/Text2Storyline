@@ -1,0 +1,391 @@
+<div *ngIf="!loading && !oops">
+  <nav class="mat-elevation-z0 navbar navbar-expand-lg" [ngClass]="isQueried == true ? 'banner2' : 'banner1'">
+    <div class="container-fluid" style="width: 100%;">
+      <div *ngIf="isQueried" class="bannerSearch">
+        <form (submit)="beginQuery($event)">
+          <div class="input-group rounded search">
+            <input
+              value="{{ queryType == 'single' ? url : inp }}"
+              (change)="beginURL($event)"
+              type="text"
+              class="form-control rounded searchTerm"
+              id="narrativaURL"
+              placeholder="Introduza a sua Query ou URL"
+              aria-label="Search"
+              aria-describedby="search-addon"
+            />
+            <button class="input-group-text border-0" [disabled]="loading">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+        </form>
+      </div>
+      <a *ngIf="!isQueried" class="navbar-brand" href="/" id="bannerLogo" style="display: none">
+        <img src="../../assets/narrArquivo_TextWhite.png" class="whiteLogo" alt="narrArquivo">
+      </a>
+      <a *ngIf="isQueried" class="navbar-brand" style="position: fixed; top: 10px; left: 10px" href="/" id="bannerLogo">
+        <img src="../../assets/narrArquivo_TextWhite.png" class="whiteLogo" alt="narrArquivo">
+      </a>
+      <div class="bannerButtons">
+        <button *ngIf="!isQueried" style="margin-right: 15px" class="nav-button" (click)="changeNarrToggle()">
+          <i class="fas fa-book-open"></i>
+          <span id="narrTextToggle"> Texto Livre</span>
+        </button>
+        <button *ngIf="isQueried" style="margin-right: 15px" aria-checked="true" class="nav-button" (click)="changeNarrToHome()">
+          <i class="fas fa-book-open"></i>
+          <span id="narrTextToggle"> Narrativa</span>
+        </button>
+        <button class="dropdown-toggle nav-button" id="dropdownMenuButton" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Sobre
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" routerLink="sobre/equipa"><i class="fas fa-user-circle"></i> Equipa</a>
+          <a class="dropdown-item" routerLink="sobre/referencias"><i class="fas fa-book-open"></i> Referências</a>
+          <a class="dropdown-item" target="_blank" href="https://github.com/liaad/time-matters"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a>
+          <a class="dropdown-item" (click)="openDialog()"><i class="fas fa-video" aria-hidden="true"></i> Video</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+</div>
+
+<div class="return-to-top" (click)="topScroll()" id="toTopArrow">
+  <i class="icon-chevron-up"></i>
+</div>
+
+<div *ngIf="!oops && !loading && !requestMade">
+  <div>
+    <div class="search_banner">
+      <a class="mainlogo" href="./">
+        <img class="logoPic" src="../../assets/narrArquivo_FullBlue.png"  alt="narrArquivo"/>
+      </a>
+      <form (submit)="beginQuery($event)">
+        <div class="input-group rounded search">
+          <input
+            value="{{ inp ? inp : url }}"
+            (change)="beginURL($event)"
+            type="text"
+            class="form-control rounded searchTerm"
+            id="narrativaURL"
+            placeholder="Introduza um termo de pesquisa ou link de uma notícia para gerar uma narrativa"
+            aria-label="Search"
+            aria-describedby="search-addon"
+          />
+          <button class="input-group-text border-0" [disabled]="loading">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <a class="arrowdiv" (click)="scrollDown()">
+      <div class="arrow arrow-container">
+        <div class="arrow-down"></div>
+      </div>
+    </a>
+
+    <div class="row">
+      <div *ngIf="!loadingTrends1 && windowWidth > 1100" class="column left">
+        <table class="styled-table fade-in">
+          <thead>
+          <tr>
+            <th style="text-align: center">Termos mais pesquisados a {{currentDate}}</th>
+          </tr>
+          </thead>
+          <tbody *ngFor="let item of trending.slice(0,7)">
+          <tr class="active-row"
+              (click)="!loading ? beginQuery(item) : ''" style="cursor: pointer">
+            <td>{{item}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="column middle">
+        <div id="carousel" class="carousel slide" data-ride="carousel">
+          <ol class="carousel-indicators">
+            <li data-target="#carousel" data-slide-to="0" class="active"></li>
+            <li data-target="#carousel" data-slide-to="1"></li>
+            <li data-target="#carousel" data-slide-to="2"></li>
+            <li data-target="#carousel" data-slide-to="3"></li>
+            <li data-target="#carousel" data-slide-to="4"></li>
+            <li data-target="#carousel" data-slide-to="5"></li>
+            <li data-target="#carousel" data-slide-to="6"></li>
+            <li data-target="#carousel" data-slide-to="7"></li>
+          </ol>
+          <div class="carousel-inner">
+            <div class="carousel-item active" style="cursor: pointer" (click)="!loading ? beginCarouselQuery('António Costa') : ''">
+              <img class="carousel_image d-block w-100" src="../../assets/6Base_AntonioCosta.jpg" alt="António Costa">
+              <div class="carousel-caption d-none d-md-block">
+                <h1 style="text-shadow: 2px 0 0 black, -2px 0 0 black, 0 2px 0 black, 0 -2px 0 black, 2px 2px black, -2px -2px 0 black, 2px -2px 0 black, -2px 2px 0 black;">
+                  <strong>António Costa</strong>
+                </h1>
+                <p></p>
+              </div>
+            </div>
+            <div class="carousel-item" style="cursor: pointer" (click)="!loading ? beginCarouselQuery('Whitney Houston') : ''">
+              <img class="carousel_image d-block w-100" src="../../assets/2Base_Whitney.jpg" alt="Whitney Houston">
+              <div class="carousel-caption d-none d-md-block">
+                <h1 style="text-shadow: 2px 0 0 black, -2px 0 0 black, 0 2px 0 black, 0 -2px 0 black, 2px 2px black, -2px -2px 0 black, 2px -2px 0 black, -2px 2px 0 black;">
+                  <strong>Whitney Houston</strong>
+                </h1>
+                <p></p>
+              </div>
+            </div>
+            <div class="carousel-item" style="cursor: pointer" (click)="!loading ? beginCarouselQuery('Joe Biden') : ''">
+              <img class="carousel_image d-block w-100" src="../../assets/2Base_JoeBiden.jpg" alt="Joe Biden">
+              <div class="carousel-caption d-none d-md-block">
+                <h1 style="text-shadow: 2px 0 0 black, -2px 0 0 black, 0 2px 0 black, 0 -2px 0 black, 2px 2px black, -2px -2px 0 black, 2px -2px 0 black, -2px 2px 0 black;">
+                  <strong>Joe Biden</strong>
+                </h1>
+                <p></p>
+              </div>
+            </div>
+            <div class="carousel-item" style="cursor: pointer" (click)="!loading ? beginCarouselQuery('Crise Crimeia') : ''">
+              <img class="carousel_image d-block w-100" src="../../assets/3Base_CriseCrimeia.jpg" alt="Crise Crimeia">
+              <div class="carousel-caption d-none d-md-block">
+                <h1 style="text-shadow: 2px 0 0 black, -2px 0 0 black, 0 2px 0 black, 0 -2px 0 black, 2px 2px black, -2px -2px 0 black, 2px -2px 0 black, -2px 2px 0 black;">
+                  <strong>Crise Crimeia</strong>
+                </h1>
+                <p></p>
+              </div>
+            </div>
+            <div class="carousel-item" style="cursor: pointer" (click)="!loading ? beginCarouselQuery('Vladimir Putin') : ''">
+              <img class="carousel_image d-block w-100" src="../../assets/4Base_Putin.jpg" alt="Vladimir Putin">
+              <div class="carousel-caption d-none d-md-block">
+                <h1 style="text-shadow: 2px 0 0 black, -2px 0 0 black, 0 2px 0 black, 0 -2px 0 black, 2px 2px black, -2px -2px 0 black, 2px -2px 0 black, -2px 2px 0 black;">
+                  <strong>Vladimir Putin</strong>
+                </h1>
+                <p></p>
+              </div>
+            </div>
+            <div class="carousel-item" style="cursor: pointer" (click)="!loading ? beginCarouselQuery('Incêndios Florestais') : ''">
+              <img class="carousel_image d-block w-100" src="../../assets/5Base_Incendios.jpg" alt="Incêndios Florestais">
+              <div class="carousel-caption d-none d-md-block">
+                <h1 style="text-shadow: 2px 0 0 black, -2px 0 0 black, 0 2px 0 black, 0 -2px 0 black, 2px 2px black, -2px -2px 0 black, 2px -2px 0 black, -2px 2px 0 black;">
+                  <strong>Incêndios Florestais</strong>
+                </h1>
+                <p></p>
+              </div>
+            </div>
+            <div class="carousel-item" style="cursor: pointer" (click)="!loading ? beginCarouselQuery('Transnístria') : ''">
+              <img class="carousel_image d-block w-100" src="../../assets/6Base_Transnistria.jpg" alt="Transnístria">
+              <div class="carousel-caption d-none d-md-block">
+                <h1 style="text-shadow: 2px 0 0 black, -2px 0 0 black, 0 2px 0 black, 0 -2px 0 black, 2px 2px black, -2px -2px 0 black, 2px -2px 0 black, -2px 2px 0 black;">
+                  <strong>Transnístria</strong>
+                </h1>
+                <p></p>
+              </div>
+            </div>
+            <div class="carousel-item" style="cursor: pointer" (click)="!loading ? beginCarouselQuery('Hepatite') : ''">
+              <img class="carousel_image d-block w-100" src="../../assets/7Base_Hepatite.jpg" alt="Hepatite">
+              <div class="carousel-caption d-none d-md-block">
+                <h1 style="text-shadow: 2px 0 0 black, -2px 0 0 black, 0 2px 0 black, 0 -2px 0 black, 2px 2px black, -2px -2px 0 black, 2px -2px 0 black, -2px 2px 0 black;">
+                  <strong>Hepatite</strong>
+                </h1>
+                <p></p>
+              </div>
+            </div>
+          </div>
+          <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next" href="#carousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+        </div>
+      </div>
+      <div *ngIf="!loadingTrends1 && windowWidth > 1100" class="column right tableWide">
+        <table class="styled-table fade-in">
+          <thead>
+          <tr>
+            <th style="text-align: center">Termos mais pesquisados a {{currentDate}}</th>
+          </tr>
+          </thead>
+          <tbody *ngFor="let item of trending.slice(7,14)">
+          <tr class="active-row"
+              (click)="!loading ? beginQuery(item) : ''" style="cursor: pointer">
+            <td>{{item}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="!loadingTrends1 && windowWidth <= 1100" class="column left">
+        <table class="styled-table fade-in">
+          <thead>
+          <tr>
+            <th style="text-align: center">Termos mais pesquisados a {{currentDate}}</th>
+          </tr>
+          </thead>
+          <tbody *ngFor="let item of trending.slice(0,10)">
+          <tr class="active-row"
+              (click)="!loading ? beginQuery(item) : ''" style="cursor: pointer">
+            <td>{{item}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- NARRATIVE CARDS -->
+    <div *ngIf="!loading" [ngClass]="loadingTrends1 == true ? 'narrative1' : 'narrative2'" class="narrative1 narrDivider" id="narrativa">
+      As nossas narrativas:
+    </div>
+
+    <div [ngClass]="loadingTrends1 == true ? 'narratives1' : 'narratives2'" class="narratives1">
+      <div *ngFor="let item of data">
+        <div class="cards"
+             (click)="!loading ? beginQuery(item.link) : ''">
+          <div class="card__image" style="background: url('../../assets/{{ item.bigPic }}') center / cover no-repeat">
+          </div>
+          <div class="card__body">
+            <div class="card__items--inline">
+              <div class="card__title text--bold">{{ item.title }}</div>
+            </div>
+            <div class="card__items--inline">
+              <div class="rating">
+                <div class="rating__icon">
+                  <i class="fas fa-newspaper"></i>
+                </div>
+                <div class="rating__value">{{ item.byX }}</div>
+              </div>
+              <span>&nbsp;&bull;&nbsp;</span>
+              <div class="rating">
+                <div class="rating__value">{{ item.date }}</div>
+                <div class="rating__icon">
+                  <i class="fas fa-calendar"></i>
+                </div>
+              </div>
+            </div>
+            <div class="card__description">
+              <hr/>
+              <p style="flex-wrap: nowrap; font-size: 14px; text-align: justify; text-justify: inter-character;">
+                {{ item.snippet }}
+              </p>
+            </div>
+          </div>
+          <div class="card__tags" style="justify-content: center">
+            <div *ngFor="let tag of item.tags">
+              <div class="tag">{{ tag }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div *ngIf="requestMade && !oops && !loading">
+  <app-query
+    (toBack)="resetValues()"
+    [errorWikifier]="errorWikifier"
+    [inpSingle]="url"
+    [inpMultiple]="inp"
+    [queryType]="queryType"
+    [article]="result"
+    [summary]="summary"
+    [options]="timelineOptions"
+    [multidocFiles]="multidocFiles"
+    [multidocDates]="multidocDates"
+    [multidocScores]="multidocScores"
+    [topTen]="topTen"
+    [wiki]="wiki"
+    [dbpedia]="dbpedia"
+  >
+  </app-query>
+</div>
+
+<!-- LOADING SCREEN -->
+<div *ngIf="loading && !oops">
+  <nav class="mat-elevation-z0 navbar navbar-expand-lg banner1">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/" id="bannerLogo">
+        <img src="../../assets/narrArquivo_TextWhite.png" class="whiteLogo" alt="narrArquivo">
+      </a>
+      <div style="position: fixed; right: 10px">
+        <button style="margin-right: 15px" aria-checked="true" class="nav-button" (click)="changeNarrToHome()">
+          <i class="fas fa-book-open"></i>
+          <span id="narrTextToggle"> Narrativa</span>
+        </button>
+        <button class="dropdown-toggle nav-button" id="dropdownMenuButton" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Sobre
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" routerLink="/sobre/equipa"><i class="fas fa-user-circle"></i> Equipa</a>
+          <a class="dropdown-item" routerLink="/sobre/referencias"><i class="fas fa-book-open"></i> Referências</a>
+          <a class="dropdown-item" target="_blank" href="https://github.com/liaad/time-matters"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a>
+          <a class="dropdown-item" (click)="openDialog()"><i class="fas fa-video" aria-hidden="true"></i> Video</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div *ngIf="queryType == 'single'" class="loaderText">
+    <h2 style="color: black; text-align: center; margin: 0 auto;">A carregar a narrativa para o URL</h2>
+    <br><br>
+    <h3 style="color: black; text-align: center; margin: 0 auto;"><i class="darkblue" style="line-height: 200%; padding: 10px 12px 10px 10px; border-radius: 10px 10px 10px 10px;">{{inp}}</i></h3>
+    <br><br><br><br>
+  </div>
+  <div *ngIf="queryType == 'multiple'" class="loaderText">
+    <h2 style="color: black; text-align: center; margin: 0 auto;">A carregar a narrativa para a query</h2>
+    <br><br><br>
+    <h3 style="color: black; text-align: center; margin: 0 auto; font-size: 22px; max-width: 400px; padding: 0 20px;">
+      <i class="darkblue" style="line-height: 200%; padding: 10px 12px 10px 10px; border-radius: 10px 10px 10px 10px;">{{inp}}</i>
+    </h3>
+    <br><br><br><br>
+  </div>
+  <div class="loader">
+    <img src="../../assets/loading2.gif"  alt="Loading"/>
+    <br><br>
+    <h3 style="color: black; text-align: center; margin: 0 auto;">Por favor aguarde...</h3>
+  </div>
+</div>
+
+<!-- ERROR SCREEN -->
+<div *ngIf="oops">
+  <nav class="mat-elevation-z0 navbar navbar-expand-lg banner1">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/" id="bannerLogo">
+        <img src="../../assets/narrArquivo_TextWhite.png" class="whiteLogo" alt="narrArquivo">
+      </a>
+      <div style="position: fixed; right: 10px">
+        <button style="margin-right: 15px" aria-checked="true" class="nav-button" (click)="changeNarrToHome()">
+          <i class="fas fa-book-open"></i>
+          <span id="narrTextToggle"> Narrativa</span>
+        </button>
+        <button class="dropdown-toggle nav-button" id="dropdownMenuButton" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Sobre
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" routerLink="../sobre/equipa"><i class="fas fa-user-circle"></i> Equipa</a>
+          <a class="dropdown-item" target="_blank" href="https://github.com/liaad/time-matters"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a>
+          <a class="dropdown-item" (click)="openDialog()"><i class="fas fa-video" aria-hidden="true"></i> Video</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div style="position: absolute; top: 20%; width: 100%;">
+    <h2 style="position: absolute; left: 49.5%; transform: translate(-50%, -50%); text-align: center; color: black; font-size: 45px; font-family: 'Teko', sans-serif;">
+      ERRO {{errorCode}}
+    </h2>
+    <a href="./" style="position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%)">
+      <img style="width: 100px" src="../../assets/narrArquivo_Logo.png"  alt="narrArquivo"/>
+    </a>
+    <br><br><br><br><br><br><br><br><br>
+    <h2 style="text-align: center; color: black; font-size: 25px">
+      {{
+      errorCode == "404" || errorCode == "403"
+        ? errorAPI : "Não foi possivel criar uma narrativa para a Query ou URL introduzido"
+      }}
+    </h2>
+    <div class="errordiv">
+      <a href="/" class="errorbutton">INÍCIO</a>
+    </div>
+    <br><br><br><br><br><br>
+    <h2 style="position: absolute; left: 49.5%; transform: translate(-50%, -50%); text-align: center; font-size: 20px; color: black">
+      Tente novamente
+    </h2>
+  </div>
+</div>

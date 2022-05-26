@@ -1,0 +1,234 @@
+.banner {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+  height: 8%;
+  background-color: rgba(3, 63, 114, 1);
+}
+
+.menu-item {
+  color: white;
+  background-color: #033F72;
+  font-family: 'Work Sans', sans-serif;
+  font-size: 14px;
+}
+
+.nav-button {
+  position: sticky;
+  background-color: #033F72;
+  color: white;
+  font-family: 'Work Sans', sans-serif;
+  border-color: transparent;
+}
+
+.nav-button:hover {
+  background-color: #023969;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-left: -50px;
+  background-color: #033F72;
+  color: white !important;
+}
+
+.dropdown-item {
+  font-weight: lighter;
+  cursor: pointer !important;
+}
+
+.dropdown-item:hover {
+  background-color: #023969;
+  color: white !important;
+  cursor: pointer !important;
+}
+
+.fundo {
+  background-color: #f3f5f7;
+  padding-top: 20px;
+}
+
+.titulo_preto{
+  color: black;
+}
+
+.miniText {
+  font-size: 35px;
+  font-family: "Nexa Bold", cursive ;
+  margin-bottom: 0;
+  color: #ffffff;
+  background-color: #033F72;
+  padding-left: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.miniText2 {
+  font-size: 17px;
+  font-family: 'Work Sans', sans-serif;
+  margin-bottom: 0;
+  color: #ffffff;
+  background-color: #033F72;
+  padding-left: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.knowTeam {
+  font-size: 30px;
+}
+
+.text {
+  text-align: justify;
+  font-size: 15px;
+  padding-left: 15px;
+}
+
+.authors {
+  font-size: 25px;
+}
+
+.jumbotron {
+  background: linear-gradient(to bottom, rgba(0,64,107,0.5) 0%,rgba(0,64,107,0.89) 100%);
+}
+
+.subtitles {
+  font-size: 18px;
+  padding-top:-25px;
+}
+
+.linha {
+  padding-bottom: 30px;
+}
+
+.nome {
+  font-family: 'Work Sans', sans-serif;
+}
+
+p {
+  padding-right: 70px;
+  text-align: center;
+}
+
+.p1 {
+  color:#000;
+  font-size: 15px;
+  text-align: justify;
+  padding-top: 15px;
+  padding-left: 14px;
+}
+
+.p2 {
+  color: #000;
+  font-size: 15px;
+  text-align: justify;
+  padding-top: 15px;
+  padding-left: 30px;
+}
+
+.mat-list-base .mat-list-item .mat-list-avatar, .mat-list-base .mat-list-option .mat-list-avatar {
+  flex-shrink: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.developer {
+  padding-bottom: 26px;
+}
+
+.example-card {
+  min-width:    210px;
+  max-width:    210px;
+  min-height:   305px;
+  max-height:   305px;
+  justify-content: center;
+  align-items: center;
+}
+.fotoCard{
+  width: 67px;
+  height: 67px;
+  border-radius: 50%;
+}
+.cardBig{
+  margin-right: 5px;
+  margin-bottom: 7px;
+}
+
+*:focus,
+*:active {
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.wrapper {
+  display: inline-flex;
+  list-style: none;
+  margin-left: -30px;
+}
+
+.icon:hover .fa-linkedin,
+.icon:hover .fa-globe-americas,
+.icon:hover .fa-envelope {
+  color: #fff !important;
+  transition: ease-in-out 0.3s;
+}
+
+.fa-linkedin,
+.fa-globe-americas,
+.fa-envelope{
+  color: black !important;
+}
+
+
+
+.wrapper .icon {
+  position: relative;
+  background: #ffffff;
+  border-radius: 50%;
+  padding: 10px;
+  margin: 5px;
+  width: 40px;
+  height: 40px;
+  font-size: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.wrapper .icon:hover span,
+.wrapper .icon:hover .tooltip {
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.wrapper .linked-in:hover,
+.wrapper .linked-in:hover .tooltip,
+.wrapper .linked-in:hover .tooltip::before {
+  background: #0e76a8;
+  color: #ffffff !important;
+  transition: ease-in-out 0.3s;
+}
+
+.wrapper .website:hover,
+.wrapper .website:hover .tooltip,
+.wrapper .website:hover .tooltip::before {
+  background: #308c56;
+  color: #ffffff !important;
+  transition: ease-in-out 0.3s;
+}
+
+.wrapper .email:hover,
+.wrapper .email:hover .tooltip,
+.wrapper .email:hover .tooltip::before {
+  background: #CD201F;
+  color: #ffffff !important;
+  transition: ease-in-out 0.3s;
+}

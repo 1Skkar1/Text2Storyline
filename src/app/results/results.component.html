@@ -1,0 +1,47 @@
+<div *ngFor="let item of multidocSpliced">
+  <div class="timematters-button">
+    <button mat-fab (click)="startSingleDoc(item.url)" class="btn-tm btn btn-primary" title="Criar narrativa para este arquivo"><i class="fas fa-solid fa-book-open fa-xs"></i></button>
+  </div>
+  <h1 class="result_title" (click)="openArquivo(item.url)">{{item.title}}</h1>
+  <span>{{item.snippet}}</span>
+  <div style="position: fixed; right: 10px">
+    <span *ngIf="sortBy == 'scores'" class="result_score">Score: [{{item.tempScores[0]}}]</span>
+  </div>
+  <br>
+  <span *ngFor="let date of item.tempExpressions.slice(0,5); let i = index; let l = count" class="result_date">{{date}}
+    <span *ngIf="l > 1 && i != l - 1"> &bull; </span>
+    <span *ngIf="l == 5 && i == l - 1">&nbsp;...</span>
+  </span>
+  <hr>
+</div>
+
+<div *ngIf="singleNarr" class="singleOverlay">
+  <span>TEST</span>
+  <div class="cookiesContent" id="cookiesPopup">
+    <button class="close">✖</button>
+    <img src="https://cdn-icons-png.flaticon.com/512/1047/1047711.png" alt="cookies-img" />
+    <p>We use cookies for improving user experience, analytics and marketing.</p>
+    <button class="accept">That's fine!</button>
+  </div>
+</div>
+
+<!--
+<mat-paginator [pageSize]="10" [length]="multiLen" [pageSizeOptions]="[10, 20, 50, 100]" (page)="OnPageChange($event)"></mat-paginator>
+
+<div class="pagination-wrapper">
+  <div class="pagination">
+    <a class="page-numbers prev" href="javascript:">prev</a>
+    <a aria-current="page" class="page-numbers current">1</a>
+    <a class="page-numbers" href="javascript:">2</a>
+    <a class="page-numbers" href="javascript:">3</a>
+    <a class="page-numbers" href="javascript:">4</a>
+    <a class="page-numbers" href="javascript:">5</a>
+    <a class="page-numbers" href="javascript:">6</a>
+    <a class="page-numbers" href="javascript:">7</a>
+    <a class="page-numbers" href="javascript:">8</a>
+    <a class="page-numbers" href="javascript:">9</a>
+    <a class="page-numbers" href="javascript:">10</a>
+    <a class="page-numbers next" href="javascript:">next</a>
+  </div>
+</div>
+-->

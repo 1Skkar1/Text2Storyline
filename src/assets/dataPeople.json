@@ -1,0 +1,52 @@
+{"data":
+  [
+    {
+      "bigPic": "RCampos.jpg",
+      "firstName":"Ricardo",
+      "lastName":"Campos",
+      "linkLinkedIn": "https://www.linkedin.com/in/camposricardo/",
+      "linkWebsite": "https://www.ccc.ipt.pt/~ricardo/",
+      "linkEmail": "mailto://ricardo.campos@ipt.pt"
+    },
+    {
+      "bigPic": "FranciscoGonçalves.jpg",
+      "firstName":"Francisco",
+      "lastName":"Gonçalves",
+      "linkLinkedIn": "https://www.linkedin.com/in/fgon16/",
+      "linkWebsite": "https://fgon16.netlify.app/",
+      "linkEmail": "mailto://fg16.atlas@gmail.com"
+    },
+    {
+      "bigPic": "fotoJorge.png",
+      "firstName":"Jorge",
+      "lastName":"Duque",
+      "linkLinkedIn": "https://www.linkedin.com/in/djorge7/",
+      "linkWebsite": "https://github.com/DarVoid/",
+      "linkEmail": "mailto://jorgeraposoduque@gmail.com"
+    },
+    {
+      "bigPic": "Alipio.jpg",
+      "firstName":"Alípio",
+      "lastName":"Jorge",
+      "linkLinkedIn": "https://www.linkedin.com/in/al%C3%ADpio-jorge-29085813/",
+      "linkWebsite": "https://www.dcc.fc.up.pt/~amjorge/",
+      "linkEmail": "mailto://amjorge@fc.up.pt"
+    },
+    {
+      "bigPic": "GD.jpg",
+      "firstName":"Gaël",
+      "lastName":"Dias",
+      "linkLinkedIn": "https://www.linkedin.com/in/ga%C3%ABl-dias-98132949/",
+      "linkWebsite": "https://dias.users.greyc.fr/",
+      "linkEmail": "mailto://gael.dias@unicaen.fr "
+    },
+    {
+      "bigPic": "CN.jpg",
+      "firstName":"Célia",
+      "lastName":"Nunes",
+      "linkLinkedIn": "https://www.linkedin.com/in/c%C3%A9lia-nunes-7523a968/",
+      "linkWebsite": "http://www.mat.ubi.pt/~celia/",
+      "linkEmail": "mailto://celian@ubi.pt"
+    }
+  ]
+}
