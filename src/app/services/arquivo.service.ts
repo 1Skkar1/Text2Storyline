@@ -19,8 +19,7 @@ export class ArquivoService {
     this.urlQueryCorpus = "https://tm-websuiteapps.ipt.pt/timematters/QueryArquivoPT/RuleBased/api/v1.0/ScoreByCorpus";
     this.urlQueryDoc = "https://tm-websuiteapps.ipt.pt/timematters/QueryArquivoPT/RuleBased/api/v1.0/ScoreByDoc";
     this.url = "https://tm-websuiteapps.ipt.pt/arquivo/api/v1.0/textsearch_query";
-    this.urlImg = "https://tm-websuiteapps.ipt.pt/arquivo/api/v1.0/imagesearch_query";
-    this.urlImg2 = "https://arquivo.pt/imagesearch";
+    this.urlImg = "https://arquivo.pt/imagesearch";
   }
 
   public getQuery(query: string, options: any): Observable<any> {
@@ -80,29 +79,7 @@ export class ArquivoService {
   }
 
   public getImgURL(search: string): Observable<any> {
-    let formData = new FormData()
-    formData.append("query", search)
-    formData.append("max_items", "1")
-    formData.append("domains", JSON.stringify(['']))
-    formData.append("last_years", "10")
-    formData.append("size", "md")
-    formData.append("typeimg", "jpg")
-
-    return this.http.post(this.urlImg, formData).pipe(
-      map((res, err) => {
-        if (res) {
-          //console.log(res);
-          return res;
-        } else {
-          //console.log(err);
-          return err;
-        }
-      })
-    );
-  }
-
-  public getImgURL2(search: string): Observable<any> {
-    let realURL = this.urlImg2 + "?q=" + search + "&size=md";
+    let realURL = this.urlImg + "?q=" + search + "&size=md";
     return this.http.get(realURL).pipe(
       map((res, err) => {
         if (res) {

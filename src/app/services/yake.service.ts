@@ -14,7 +14,6 @@ export class YakeService {
 
   constructor(private http: HttpClient) {
     this.url = "https://tm-websuiteapps.ipt.pt/yake/api/v2.0/extract_keywords";
-    this.url2 = "http://narrarquivo.inesctec.pt/yake/v2/extract_keywords";
     this.urlWordCloud = "/wordCloudCMH/api/v1.0/base64";
   }
 
@@ -40,8 +39,30 @@ export class YakeService {
     );
   }
 
-  public getWordCloud(keywords: string): Observable<any> {
-    const jsoon = '{ "keywords":' + JSON.stringify(keywords) + ', "language": "portuguese" }'
+  public getWordCloud(keywords: string, lang: string): Observable<any> {
+    let jsoon;
+    if (lang ==  "English") {
+      jsoon = '{ "keywords":' + JSON.stringify(keywords) + ', "language": "english" }'
+    }
+    else if (lang ==  "French") {
+      jsoon = '{ "keywords":' + JSON.stringify(keywords) + ', "language": "french" }'
+    }
+    else if (lang ==  "German") {
+      jsoon = '{ "keywords":' + JSON.stringify(keywords) + ', "language": "german" }'
+    }
+    else if (lang ==  "Italian") {
+      jsoon = '{ "keywords":' + JSON.stringify(keywords) + ', "language": "italian" }'
+    }
+    else if (lang ==  "Dutch") {
+      jsoon = '{ "keywords":' + JSON.stringify(keywords) + ', "language": "dutch" }'
+    }
+    else if (lang ==  "Spanish") {
+      jsoon = '{ "keywords":' + JSON.stringify(keywords) + ', "language": "spanish" }'
+    }
+    else {
+      jsoon = '{ "keywords":' + JSON.stringify(keywords) + ', "language": "portuguese" }'
+    }
+
     const realURL = this.urlWordCloud + "?json=" + jsoon + "&width=1000&height=500"
 
     return this.http.get(realURL).pipe(

@@ -56,11 +56,11 @@
               </div>
               <mat-label style="font-size: calc(15px + 1vw); color: #033F72">Criar narrativa a partir de texto livre</mat-label>
               <br>
-              <textarea [(ngModel)]="conteudoDefault" maxlength="3000" matInput #texto class="text-area" (change)='setDefaultTexto(texto)' style="width:100%; resize: none;" type="text" value="{{conteudoDefault}}" min_rows="20" rows="20" name="texto"></textarea>
+              <textarea [(ngModel)]="conteudoDefault" maxlength="5000" matInput #texto class="text-area" (change)='setDefaultTexto(texto)' style="width:100%; resize: none;" type="text" value="{{conteudoDefault}}" min_rows="20" rows="20" name="texto"></textarea>
             </mat-form-field>
 
             <div class="col-8">
-              <div  style="color: black;cursor:pointer;" *ngIf="hiddenoption && !requestMade">
+              <div style="color: black;cursor:pointer;" *ngIf="hiddenoption && !requestMade">
                 <div class="form-group row">
                   <label for="example-date-input" class="col-1 col-form-label">Data</label>
                   <div class="col-4">
@@ -82,8 +82,8 @@
         </div>
       </div>
       <div style="position: relative; left: 35px; bottom: 60px">
-        <span *ngIf="conteudoDefault.length < 2500" style="opacity: 0.65;">{{3000 - conteudoDefault.length}}</span>
-        <span *ngIf="conteudoDefault.length >= 2500" style="opacity: 0.65; color: darkred; font-weight: bold">{{3000 - conteudoDefault.length}}</span>
+        <span *ngIf="conteudoDefault.length < 2500" style="opacity: 0.65;">{{5000 - conteudoDefault.length}}</span>
+        <span *ngIf="conteudoDefault.length >= 2500" style="opacity: 0.65; color: darkred; font-weight: bold">{{5000 - conteudoDefault.length}}</span>
       </div>
     </div>
   </form>
@@ -128,21 +128,21 @@
             <span>
               </span>
             <hr>
-            <app-frame [freeText]="true" [errorWikifier]="errorWikifier" [score]="byDocOrSentece ? 'doc' : 'sentence'" [args]="result" [showOnlyRelevants]="showOnlyRel" [keywordsMatter]="withKeywords" [entitiesMatter]="withEntities" [wiki]="wiki" class="result"></app-frame>
+            <app-frame [freeText]="true" [errorWikifier]="errorWikifier" [score]="byDocOrSentece ? 'doc' : 'sentence'" [args]="result" [showOnlyRelevants]="showOnlyRelAT" [keywordsMatter]="withKeywords" [entitiesMatter]="withEntities" [wiki]="wiki" class="result"></app-frame>
             <hr>
             <div class="dateScoreColors">
-              <span><b>Escala Likert de <i>{{!showOnlyRel?"5": "3"}}</i> cores para representar a importância das expressões temporais: </b></span>
-              <span class='{{!showOnlyRel?"black": "nonviewable"}}'>[0 - 0.35]</span>
-              <span class='{{!showOnlyRel?"green": "nonviewable"}}'>]0.35 - 0.5]</span>
-              <span class="blue">]0.5 - 0.7]</span>
-              <span class="yellow">]0.7 - 0.9]</span>
-              <span class="purple">]0.9 - 1.0]</span>
+              <span><b>Escala Likert de <i>{{!showOnlyRelAT?"5": "3"}}</i> cores para representar a importância das expressões temporais: </b></span>
+              <span class='{{!showOnlyRelAT?"black": "nonviewable"}}'>[0 - 0.35]</span>
+              <span class="orange">]0.35 - 0.5]</span>
+              <span class="yellow">]0.5 - 0.7]</span>
+              <span class="green">]0.7 - 0.9]</span>
+              <span class="darkgreen">]0.9 - 1.0]</span>
             </div>
             <mat-slide-toggle class="normal-toggle afterAnnotated" color="primary" [checked]="true" (click)="toggleEntities()">Entidades</mat-slide-toggle>
             <br>
             <mat-slide-toggle class="normal-toggle afterAnnotated" color="primary" [checked]="false" (click)="toggleKeywords()">Palavras-chave</mat-slide-toggle>
             <br>
-            <mat-slide-toggle class="normal-toggle afterAnnotated" color="primary" [checked]="false" [disabled]="datasetFixed.length == datasetFixed2.length" (click)="toggleRel()">Datas menos relevantes</mat-slide-toggle>
+            <mat-slide-toggle class="normal-toggle afterAnnotated" color="primary" [checked]="false" [disabled]="datasetFixed.length == datasetFixed2.length" (click)="toggleRelAT()">Datas menos relevantes</mat-slide-toggle>
             <div class="clipboard">
               <a color="primary" href="/texto-livre"><button type="reset" class="btn btn-link">Go back</button></a>
               <button color="primary" type="submit" (click)="copyToClipboard($event)" class="btn btn-primary rounded"><i class="fas fa-clone"></i>&nbsp;&nbsp; Copiar para Clipboard</button>
@@ -151,7 +151,7 @@
 
           <!-- DETEÇÃO DE AGENTES -->
           <mat-tab class="label" label="Deteção de Agentes">
-            <app-agent-detection [errorWikifier]="errorWikifier" [queryType]="'single'" [text]="result.TextNormalized" [summary]="" [wiki]="wiki"></app-agent-detection>
+            <app-agent-detection [errorWikifier]="errorWikifier" [queryType]="'single'" [text]="result.TextNormalized" [summary]="" [wiki]="wiki" [lang]="langSelected"></app-agent-detection>
           </mat-tab>
 
           <!-- STORYLINE -->
@@ -163,25 +163,24 @@
           <mat-tab label="Agrupamento Temporal" *ngIf="dataset.length>0">
             <br>
             <div class="relToggle">
-              <mat-slide-toggle [disabled]="datasetFixed.length == datasetFixed2.length" [checked]="false" (click)='toggleRel()' class="afterAnnotated" color="primary" >Datas menos relevantes</mat-slide-toggle>
+              <mat-slide-toggle [disabled]="datasetFixed.length == datasetFixed2.length" [checked]="false" (click)='toggleRelTC()' class="afterAnnotated" color="primary" >Datas menos relevantes</mat-slide-toggle>
             </div>
 
             <br><br><br>
 
-            <div *ngIf="!showOnlyRel else onlyRel">
+            <div *ngIf="!showOnlyRelTC else onlyRel">
               <div style="margin-top:-80px;" *ngIf="df.length > 0 else nodata1">
                 <div class="timeline">
                   <div *ngFor="let item of df">
                     <div class="timeline__event timeline__event--type1">
                       <div class="timeline__event__date">
                       <span style="white-space: pre-line">
-                        <h3 style="color: #B4D5FF; font-size: 20px; text-align: center;">{{item.date}}</h3>
-                        <h3 style="font-size: 22px; text-align: center; line-height: 45px"><b><strong>{{item.score}}</strong></b></h3>
+                        <h3 style="color: #B4D5FF; font-size: 24px; text-align: center; padding-top: 20px">{{item.date}}</h3>
                       </span>
                       </div>
                       <div class="timeline__event__content ">
                         <div class="timeline__event__title">
-                          {{item.score}}
+                          <p [innerHTML]="item.score"></p>
                         </div>
                         <div class="timeline__event__description">
                           <p [innerHTML]="item.text"></p>
@@ -225,8 +224,8 @@
 
           </mat-tab>
           <mat-tab label="Nuvem de Palavras">
-            <app-wordcloud [args]="result" [queryType]="'single'" [multidocFiles]=""></app-wordcloud>
-          </mat-tab >
+            <app-wordcloud [lang]="langSelected" [args]="result" [queryType]="'single'" [multidocFiles]=""></app-wordcloud>
+          </mat-tab>
         </mat-tab-group>
       </mat-card>
       <br>

@@ -15,6 +15,7 @@ export class AgentDetectionComponent implements OnInit {
   @Input() summary: Array<string>;
   @Input() queryType: string;
   @Input() wiki: any;
+  @Input() lang: string;
 
   public loading: boolean;
   public error: boolean;
@@ -79,27 +80,35 @@ export class AgentDetectionComponent implements OnInit {
   }
 
   wikification() {
-    let maxMention, maxRank = 0
+    let maxRank = 0
+    let minRank = 1
+    let totRank = 0
+    let avgRank: number
+    let multiLen = 0
 
     if (this.queryType == "single") {
       for (let i = 0; i < this.wiki.annotations.length; i++) {
-        let support = this.wiki.annotations[i].support
-        maxMention = 0
-        maxRank = 0
-        for (let j = 0; j < support.length; j++) {
-          let pMention = support[j].pMentionGivenSurface
-          let pRank = support[j].pageRank
-          //console.log(this.wiki.annotations[i].title + " : " + pMention)
-          //console.log(this.wiki.annotations[i].title + " : " + pRank)
-          if (pMention > 0.50 && pMention > maxMention || pRank > 0.005 && pRank > maxRank) {
-            maxMention = pMention
-            maxRank = pRank
-          }
+        let pageRank = this.wiki.annotations[i].pageRank
+        if (pageRank < minRank) {
+          minRank = pageRank
         }
-        if (maxMention != 0 && maxRank != 0) {
+        if (pageRank > maxRank) {
+          maxRank = pageRank
+        }
+        totRank += pageRank
+      }
+      let try1 = this.wiki.annotations.length / 1.75
+      avgRank = totRank / try1
+
+      for (let i = 0; i < this.wiki.annotations.length && this.wikiData.length < 50; i++) {
+        let pageRank = this.wiki.annotations[i].pageRank
+        //console.log(this.wiki.annotations[i].title + ": " + pageRank)
+        if (pageRank > avgRank) {
           if (this.wiki.annotations[i].wikiDataClasses?.length > 0) {
             if (this.wiki.annotations[i]?.wikiDataClasses[0]?.enLabel != 'year'
-              && this.wiki.annotations[i]?.wikiDataClasses[0]?.enLabel != 'calendar year') {
+              && this.wiki.annotations[i]?.wikiDataClasses[0]?.enLabel != 'calendar year'
+              && this.wiki.annotations[i]?.wikiDataClasses[0]?.enLabel != 'common year'
+              && this.wiki.annotations[i]?.wikiDataClasses[0]?.enLabel != 'point in time with respect to recurrent timeframe') {
               let data = {
                 "title": this.wiki.annotations[i].title,
                 "url": this.wiki.annotations[i].url,
@@ -114,7 +123,7 @@ export class AgentDetectionComponent implements OnInit {
             let data = {
               "title": this.wiki.annotations[i].title,
               "url": this.wiki.annotations[i].url,
-              "class": "",
+              "class": "-",
               "image": "",
               "text": ""
             }
@@ -126,44 +135,53 @@ export class AgentDetectionComponent implements OnInit {
 
     else {
       for (let i = 0; i < this.wiki.length; i++) {
+        multiLen += this.wiki[i].annotations.length
         for (let j = 0; j < this.wiki[i].annotations.length; j++) {
-          let wikiTitle = this.wikiData.map(a => a.title)
-          let support = this.wiki[i].annotations[j].support
-          maxMention = 0
-          maxRank = 0
-          for (let j = 0; j < support.length; j++) {
-            let pMention = support[j].pMentionGivenSurface
-            let pRank = support[j].pageRank
-            //console.log(this.wiki.annotations[i].title + " : " + pMention)
-            //console.log(this.wiki.annotations[i].title + " : " + pRank)
-            if (pMention > 0.50 && pMention > maxMention || pRank > 0.01 && pRank > maxRank) {
-              maxMention = pMention
-              maxRank = pRank
-            }
+          let pageRank = this.wiki[i].annotations[j].pageRank
+          if (pageRank < minRank) {
+            minRank = pageRank
           }
-          if (maxMention != 0 && maxRank != 0 && !wikiTitle.includes(this.wiki[i].annotations[j].title)) {
-            if (this.wiki[i].annotations[j].wikiDataClasses?.length > 0) {
-              if (this.wiki[i].annotations[j]?.wikiDataClasses[0]?.enLabel != 'year'
-                && this.wiki[i].annotations[j]?.wikiDataClasses[0]?.enLabel != 'calendar year') {
+          if (pageRank > maxRank) {
+            maxRank = pageRank
+          }
+          totRank += pageRank
+        }
+      }
+      let try1 = multiLen / 2.5
+      avgRank = totRank / try1
+
+      for (let i = 0; i < this.wiki.length; i++) {
+        for (let j = 0; j < this.wiki[i].annotations.length && this.wikiData.length < 50; j++) {
+          let wikiTitle = this.wikiData.map(a => a.title)
+          let pageRank = this.wiki[i].annotations[i].pageRank
+          //console.log(this.wiki[i].annotations[i].title + ": " + pageRank)
+          if (pageRank > avgRank) {
+            if (!wikiTitle.includes(this.wiki[i].annotations[j].title)) {
+              if (this.wiki[i].annotations[j].wikiDataClasses?.length > 0) {
+                if (this.wiki[i].annotations[j]?.wikiDataClasses[0]?.enLabel != 'year'
+                  && this.wiki[i].annotations[j]?.wikiDataClasses[0]?.enLabel != 'calendar year'
+                  && this.wiki[i].annotations[j]?.wikiDataClasses[0]?.enLabel != 'common year'
+                  && this.wiki[i].annotations[j]?.wikiDataClasses[0]?.enLabel != 'point in time with respect to recurrent timeframe') {
+                  let data = {
+                    "title": this.wiki[i].annotations[j].title,
+                    "url": this.wiki[i].annotations[j].url,
+                    "class": this.wiki[i].annotations[j].wikiDataClasses[0].enLabel,
+                    "image": "",
+                    "text": ""
+                  }
+                  this.wikiData.push(data)
+                }
+              }
+              else {
                 let data = {
                   "title": this.wiki[i].annotations[j].title,
                   "url": this.wiki[i].annotations[j].url,
-                  "class": this.wiki[i].annotations[j].wikiDataClasses[0].enLabel,
+                  "class": "",
                   "image": "",
                   "text": ""
                 }
                 this.wikiData.push(data)
               }
-            }
-            else {
-              let data = {
-                "title": this.wiki[i].annotations[j].title,
-                "url": this.wiki[i].annotations[j].url,
-                "class": "",
-                "image": "",
-                "text": ""
-              }
-              this.wikiData.push(data)
             }
           }
         }
@@ -184,19 +202,19 @@ export class AgentDetectionComponent implements OnInit {
 
     for (let i = 0; i < this.wikiData.length; i++) {
       this.wikifier
-        .getWikiText(this.wikiData[i].title)
+        .getWikiText(this.wikiData[i].title, this.lang)
         .pipe(
-          timeout(15000),
+          timeout(50000),
           catchError(err => {
             console.log('MediaWiki Text Error: ', err);
-            this.error = true
-            this.loading = false
+            //this.error = true
+            //this.loading = false
             return " "
           }),
           take(1))
         .subscribe((res1) => {
           if (res1) {
-            console.log(res1)
+            //console.log(res1)
             let text = typeof res1?.query?.pages[Object.keys(res1.query.pages)[0]]?.extract != 'undefined' ? res1.query.pages[Object.keys(res1.query.pages)[0]].extract : ""
             let tagText = res1?.query?.pages[Object.keys(res1.query.pages)[0]]?.title
             this.wikiTexts.push(text.split(' ').slice(0,30).join(' ') + '...')
@@ -207,7 +225,7 @@ export class AgentDetectionComponent implements OnInit {
                 this.arquivo
                   .getImgURL(this.wikiData[j].title)
                   .pipe(
-                    timeout(15000),
+                    timeout(50000),
                     catchError(err => {
                       console.log('Arquivo Image Error: ', err);
                       this.error = true
@@ -216,9 +234,9 @@ export class AgentDetectionComponent implements OnInit {
                     }),
                     take(1))
                   .subscribe((res2) => {
-                    if (res2.message == "success") {
-                      console.log(res2)
-                      let image = res2.result[1][0].imgLinkToArchive
+                    if (res2.numberOfResponseItems > 0) {
+                      //console.log(res2)
+                      let image = res2.responseItems[0].imgLinkToArchive
                       let tagImage = this.wikiData[j].title
                       this.wikiImages.push(image)
                       this.wikiTagImages.push(tagImage)
@@ -229,19 +247,19 @@ export class AgentDetectionComponent implements OnInit {
                     }
                     else {
                       this.wikifier
-                        .getWikiImage(this.wikiData[j].title)
+                        .getWikiImage(this.wikiData[j].title, this.lang)
                         .pipe(
-                          timeout(15000),
+                          timeout(50000),
                           catchError(err => {
                             console.log('MediaWiki Image Error: ', err);
-                            this.error = true
-                            this.loading = false
+                            //this.error = true
+                            //this.loading = false
                             return " "
                           }),
                           take(1))
                         .subscribe((res2) => {
                           if (res2) {
-                            console.log(res2)
+                            //console.log(res2)
                             let hasImage = res2?.query?.pages[Object.keys(res2.query.pages)[0]]?.thumbnail?.source || 0
                             if (hasImage != 0) {
                               let image = res2.query.pages[Object.keys(res2.query.pages)[0]].thumbnail.source
@@ -250,7 +268,7 @@ export class AgentDetectionComponent implements OnInit {
                               this.wikiTagImages.push(tagImage)
                             }
                             else {
-                              let image = "../../assets/defaultAgentPic2.png"
+                              let image = "../../assets/Default_Entity_ENG.jpg"
                               let tagImage = res2.query.pages[Object.keys(res2.query.pages)[0]].title
                               this.wikiImages.push(image)
                               this.wikiTagImages.push(tagImage)

@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges} from "@angular/core";
+import {Component, Input, OnChanges, OnInit} from "@angular/core";
 
 @Component({
   selector: "app-frame",
@@ -6,7 +6,7 @@ import {Component, Input, OnChanges} from "@angular/core";
   styleUrls: ["./frame.component.css"],
 })
 
-export class FrameComponent implements OnChanges {
+export class FrameComponent implements OnInit, OnChanges {
   @Input() errorWikifier: boolean;
   @Input() score: any;
   @Input() args: any;
@@ -34,14 +34,19 @@ export class FrameComponent implements OnChanges {
     this.wikiData = [];
   }
 
+  ngOnInit() {
+    this.markWikiData()
+    this.ngOnChanges()
+  }
+
   ngOnChanges() {
     this.textNormalized = this.args.TextNormalized;
     this.keywordScores = this.args.RelevantKWs;
     this.dateScores = this.args.Score;
     this.text = this.textNormalized;
 
-    if (!this.errorWikifier) {
-      this.markWikiData()
+    if (this.entitiesMatter) {
+      this.displayEntities()
     }
     else {
       this.displayText()
@@ -55,62 +60,73 @@ export class FrameComponent implements OnChanges {
   }
 
   markWikiData() {
-    let maxMention = 0
-    for (let i = 0; i < this.wiki.annotations.length; i++) {
-      let support = this.wiki.annotations[i].support
-      maxMention = 0
-      for (let j = 0; j < support.length; j++) {
-        let pMention = support[j].pMentionGivenSurface
-        //console.log(this.wiki.annotations[i].title + " : " + pMention)
-        if (pMention > 0.50 && pMention > maxMention) {
-          maxMention = pMention
-        }
-      }
-      if (maxMention != 0) {
-        let data = {
-          "title": this.wiki.annotations[i].title,
-          "url": this.wiki.annotations[i].url,
-          "class": this.wiki.annotations[i].wikiDataClasses?.length > 0 ? this.wiki.annotations[i].wikiDataClasses[0].enLabel : "",
-          "image": "",
-          "text": ""
-        }
-        this.wikiData.push(data)
-      }
-    }
+    let maxRank = 0
+    let minRank = 1
+    let totRank = 0
+    let avgRank: number
 
-    if (this.entitiesMatter) {
-      this.text = this.formatText(this.textNormalized)
-      for (let i = 0; i < this.wikiData.length; i++) {
-        if (this.wikiData[i].title.split(' ').length > 1) {
-          this.text = this.text.replace(new RegExp(this.wikiData[i].title,'gi'), "<a class='darkblue' target='_blank' href='" + this.wikiData[i].url + "'><b>" + this.wikiData[i].title + "</b></a>")
+    for (let i = 0; i < this.wiki.annotations.length; i++) {
+      let pageRank = this.wiki.annotations[i].pageRank
+      if (pageRank < minRank) {
+        minRank = pageRank
+      }
+      if (pageRank > maxRank) {
+        maxRank = pageRank
+      }
+      totRank += pageRank
+    }
+    let try1 = this.wiki.annotations.length / 1.75
+    avgRank = totRank / try1
+
+    for (let i = 0; i < this.wiki.annotations.length && this.wikiData.length < 50; i++) {
+      let pageRank = this.wiki.annotations[i].pageRank
+      //console.log(this.wiki.annotations[i].title + ": " + pageRank)
+      if (pageRank > avgRank) {
+        if (this.wiki.annotations[i].wikiDataClasses?.length > 0) {
+          if (this.wiki.annotations[i]?.wikiDataClasses[0]?.enLabel != 'year'
+            && this.wiki.annotations[i]?.wikiDataClasses[0]?.enLabel != 'calendar year'
+            && this.wiki.annotations[i]?.wikiDataClasses[0]?.enLabel != 'common year'
+            && this.wiki.annotations[i]?.wikiDataClasses[0]?.enLabel != 'point in time with respect to recurrent timeframe') {
+            let data = {
+              "title": this.wiki.annotations[i].title,
+              "url": this.wiki.annotations[i].url,
+              "class": this.wiki.annotations[i].wikiDataClasses[0].enLabel,
+              "image": "",
+              "text": ""
+            }
+            this.wikiData.push(data)
+          }
         }
         else {
+          let data = {
+            "title": this.wiki.annotations[i].title,
+            "url": this.wiki.annotations[i].url,
+            "class": "-",
+            "image": "",
+            "text": ""
+          }
+          this.wikiData.push(data)
         }
       }
-      for (let i = 0; i < Object.keys(this.keywordScores).length; i++) {
-        this.text = this.text.replace(new RegExp(">" + Object.keys(this.keywordScores)[i],'g'), "><kw>" + Object.keys(this.keywordScores)[i] + "</kw>")
-        this.text = this.text.replace(new RegExp(" " + Object.keys(this.keywordScores)[i],'g'), " <kw>" + Object.keys(this.keywordScores)[i] + "</kw>")
-      }
     }
-
-    /* dbpedia
-    if (this.entitiesMatter) {
-      this.text = this.dbpedia.replace(new RegExp('dbpedia.org/resource','g'), 'wikipedia.org/wiki')
-      for (let i = 0; i < Object.keys(this.keywordScores).length; i++) {
-        this.text = this.text.replace(new RegExp(Object.keys(this.keywordScores)[i],'g'), "<kw>" + Object.keys(this.keywordScores)[i] + "</kw>")
-      }
-    }
-    */
-
-    this.displayText()
   }
 
-  getAllIndexes(val) {
-    let indexes = [], i = -1;
-    while ((i = this.text.indexOf(val, i+1)) != -1){
-      indexes.push(i);
+  displayEntities() {
+    this.text = this.formatText(this.textNormalized)
+    for (let i = 0; i < this.wikiData.length; i++) {
+      if (!this.text.includes(">" + this.wikiData[i].title + "<")
+        && !this.text.includes("/" + this.wikiData[i].title)
+        && !this.text.includes("_" + this.wikiData[i].title + "'")
+        && !this.text.includes("_" + this.wikiData[i].title + "_")) {
+        this.text = this.text.replace(new RegExp(this.wikiData[i].title,'gi'), "<a class='darkblue' target='_blank' href='" + this.wikiData[i].url + "'><b>" + this.wikiData[i].title + "</b></a>")
+      }
     }
-    return indexes;
+    for (let i = 0; i < Object.keys(this.keywordScores).length; i++) {
+      if (!this.wikiData.map(a => a.title).includes(Object.keys(this.keywordScores)[i])) {
+        this.text = this.text.replace(new RegExp(" " + Object.keys(this.keywordScores)[i],'gi'), " <kw>" + Object.keys(this.keywordScores)[i] + "</kw>")
+      }
+    }
+    this.displayText()
   }
 
   displayText() {
@@ -139,22 +155,21 @@ export class FrameComponent implements OnChanges {
           else {
             title = "Error";
           }
+
           if (title < 0.35) {
-            color = "black";
+            color = "red";
+          }
+          else if (title >= 0.35 && title < 0.5) {
+            color = "orange";
+          }
+          else if (title >= 0.5 && title < 0.7) {
+            color = "yellow";
+          }
+          else if (title >= 0.7 && title < 0.9) {
+            color = "green";
           }
           else {
-            color = "red";
-            if (title < 0.5) {
-              color = "green";
-            } else if (title >= 0.5) {
-              color = "blue";
-              if (title > 0.7) {
-                color = "yellow";
-              }
-              if (title > 0.9) {
-                color = "purple";
-              }
-            }
+            color = "darkgreen";
           }
 
           if (a.length != 0) {
@@ -202,7 +217,7 @@ export class FrameComponent implements OnChanges {
           });
 
           ind++;
-          if (this.showOnlyRelevants && (color === "black" || color === "green")) {
+          if (this.showOnlyRelevants && (color === "black" || color === "red")) {
             x = x;
           }
           else {
@@ -230,7 +245,7 @@ export class FrameComponent implements OnChanges {
           });
           let repl_sentence = filteredstuff[objecto[0].index][1];
           ind++;
-          if (this.showOnlyRelevants && (objecto[0].color === "black"||objecto[0].color === "green")) {
+          if (this.showOnlyRelevants && (objecto[0].color === "black"||objecto[0].color === "red")) {
             repl_sentence = repl_sentence;
           }
           else {
@@ -299,23 +314,20 @@ export class FrameComponent implements OnChanges {
                 title = this.dateScores[valor.toLowerCase()][fraseIndex]["0"];
               }
 
-              if (title * 1 < 0.35 && title * 1 >= 0) {
-                color = "black";
+              if (title < 0.35) {
+                color = "red";
+              }
+              else if (title >= 0.35 && title < 0.5) {
+                color = "orange";
+              }
+              else if (title >= 0.5 && title < 0.7) {
+                color = "yellow";
+              }
+              else if (title >= 0.7 && title < 0.9) {
+                color = "green";
               }
               else {
-                color = "red";
-                if (title < 0.5) {
-                  color = "green";
-                }
-                else if (title >= 0.5) {
-                  color = "blue";
-                  if (title > 0.7) {
-                    color = "yellow";
-                  }
-                  if (title > 0.9) {
-                    color = "purple";
-                  }
-                }
+                color = "darkgreen";
               }
 
               let dispon = this.dateScores[x.substring(3, x.length - 4).toLowerCase()];
@@ -331,7 +343,7 @@ export class FrameComponent implements OnChanges {
               }
 
               if (this.showOnlyRelevants) {
-                if (color === "black" || color === "green") {
+                if (color === "black" || color === "red") {
                   x = textoAEscrever;
                 } else {
                   x =

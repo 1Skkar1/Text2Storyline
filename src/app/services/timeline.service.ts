@@ -46,8 +46,7 @@ export class TimelineService {
   public getTextKeyDateFromSingleDoc(doc: string, options: any): Observable<any> {
     const formData = new FormData();
     let realURL = this.url + "/SingleDoc";
-
-    if (options.algorithm === "py_heideltime") {
+    if (options.algo === "py_heideltime") {
       realURL += "/Heideltime/api/v1.0";
       if (options.docCreateTime) {
         formData.append("document_creation_time", options.docCreateTime);

@@ -67,7 +67,7 @@
             type="text"
             class="form-control rounded searchTerm"
             id="narrativaURL"
-            placeholder="Introduza um termo de pesquisa ou link de uma notícia para gerar uma narrativa"
+            placeholder= "Introduza um termo de pesquisa ou link de uma notícia para gerar uma narrativa"
             aria-label="Search"
             aria-describedby="search-addon"
           />
@@ -231,7 +231,7 @@
 
     <!-- NARRATIVE CARDS -->
     <div *ngIf="!loading" [ngClass]="loadingTrends1 == true ? 'narrative1' : 'narrative2'" class="narrative1 narrDivider" id="narrativa">
-      As nossas narrativas:
+      Imagens do passado para uma notícia do presente
     </div>
 
     <div [ngClass]="loadingTrends1 == true ? 'narratives1' : 'narratives2'" class="narratives1">
@@ -331,7 +331,7 @@
   <div *ngIf="queryType == 'multiple'" class="loaderText">
     <h2 style="color: black; text-align: center; margin: 0 auto;">A carregar a narrativa para a query</h2>
     <br><br><br>
-    <h3 style="color: black; text-align: center; margin: 0 auto; font-size: 22px; max-width: 400px; padding: 0 20px;">
+    <h3 style="color: black; text-align: center; margin: 0 auto; font-size: 22px; max-width: 85%; padding: 0 20px;">
       <i class="darkblue" style="line-height: 200%; padding: 10px 12px 10px 10px; border-radius: 10px 10px 10px 10px;">{{inp}}</i>
     </h3>
     <br><br><br><br>

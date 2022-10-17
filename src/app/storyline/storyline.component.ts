@@ -42,6 +42,7 @@ export class StorylineComponent implements OnInit {
   public scheduler: any;
   public images: Array<any>;
   public indexDate: Array<any>;
+  public multiRelArgs: Array<any>;
 
   constructor(
     private _snackBar: MatSnackBar,
@@ -57,6 +58,7 @@ export class StorylineComponent implements OnInit {
     this.images = [];
     this.args = [];
     this.indexDate = [];
+    this.multiRelArgs = [];
   }
 
   ngOnInit() {
@@ -135,14 +137,27 @@ export class StorylineComponent implements OnInit {
         this.indexDate.push(0);
       }
     }
-    this.args = this.topTen;
+
+    for (let i = 0; i < this.topTen.length; i++) {
+      if (this.topTen[i].score >= 0.35) {
+        this.multiRelArgs.push(this.topTen[i])
+      }
+    }
+
+    if (this.relevant) {
+      this.args = this.multiRelArgs;
+    }
+    else {
+      this.args = this.topTen;
+    }
+
     this.updateMulti();
   }
 
   updateSingle() {
+    console.log(this.args)
     let j: any;
     let counter = 0;
-    console.log(this.args)
     if (this.args.length == 0) {
       this.loading = false;
       this.noData = true;
@@ -207,7 +222,7 @@ export class StorylineComponent implements OnInit {
               }
 
               this.arquivo
-                .getImgURL2(captio)
+                .getImgURL(captio)
                 .pipe(
                   catchError(err => {
                     console.log('Arquivo Image Error: ', err);
@@ -274,10 +289,9 @@ export class StorylineComponent implements OnInit {
                     }
                     else {
                       if (this.args[h].x.length > 10) {
-                        if (this.args[h].x.charAt(10) == "t" ||
-                          (this.args[h].x.charAt(10) == "T" &&
-                            this.args[h].x.charAt(11) * 1 >= 0 &&
-                            this.args[h].x.charAt(11) * 1 <= 9)) {
+                        if (this.args[h].x.charAt(10) == "\\" ||
+                            this.args[h].x.charAt(12) * 1 >= 0 &&
+                            this.args[h].x.charAt(12) * 1 <= 9) {
                           let horas = this.args[h].x
                             .substring(10)
                             .split(":")[0];
@@ -352,7 +366,9 @@ export class StorylineComponent implements OnInit {
                                   " de " +
                                   this.args[h].x
                                     .substring(0, 10)
-                                    .split("-")[0],
+                                    .split("-")[0] +
+                                  " às " +
+                                  horas.substring(1) + ":00",
                               },
                               media: {
                                 thumbnail: url2,
@@ -550,7 +566,7 @@ export class StorylineComponent implements OnInit {
             }
 
             this.arquivo
-              .getImgURL2(captio)
+              .getImgURL(captio)
               .pipe(
                 catchError(err => {
                   console.log('Arquivo Image Error: ', err);
@@ -581,7 +597,7 @@ export class StorylineComponent implements OnInit {
                           captio.substring(0, 1).toUpperCase() +
                           captio.substring(1, captio.length) +
                           "</p>",
-                        text: this.args[h].text
+                        text: "Score: " + this.args[h].score + "<br/><br/>" + this.args[h].text
                       }
                     });
                   }
@@ -606,8 +622,7 @@ export class StorylineComponent implements OnInit {
                           captio.substring(0, 1).toUpperCase() +
                           captio.substring(1, captio.length) +
                           "</p>",
-                        text: this.args[h].text
-                        //text: this.args[h].text.split(' ').slice(0,50).join(' ') + '...',
+                        text: "Score: " + this.args[h].score + "<br/><br/>" + this.args[h].text
                       }
                     });
                   }
@@ -648,25 +663,6 @@ export class StorylineComponent implements OnInit {
             }
           }
         });
-      /*
-      if (h == this.args.length - 1) {
-        this.scheduler = setTimeout(() => {
-          this.loading = false;
-          j = { events: this.events };
-          this.jsonText = j;
-          const additionalOptions = {
-            start_at_end: false,
-            timenav_height: 10,
-            default_bg_color: { r: 255, g: 255, b: 255 },
-            trackResize: "false",
-          };
-
-          // tslint:disable-next-line: no-unused-expression
-          new TL.Timeline("my-timeline", j, additionalOptions);
-          return;
-        }, 7500);
-      }
-      */
     }
   }
 

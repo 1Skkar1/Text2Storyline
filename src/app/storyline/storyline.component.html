@@ -3,6 +3,9 @@
 <div *ngIf="queryType == 'single'" class="relToggle">
   <mat-slide-toggle [disabled]="loading || (allArgs.length == relArgs.length)" *ngIf="allArgs.length > 0 " (toggleChange)='setRelevanceSingle()' class="afterAnnotated" color="primary" [checked]="!relevant">Datas menos relevantes</mat-slide-toggle>
 </div>
+<div *ngIf="queryType == 'multiple'" class="relToggle">
+  <mat-slide-toggle [disabled]="loading || (topTen.length == multiRelArgs.length)" *ngIf="topTen.length > 0 " (toggleChange)='setRelevanceMulti()' class="afterAnnotated" color="primary" [checked]="!relevant">Datas menos relevantes</mat-slide-toggle>
+</div>
 <br><br>
 <div *ngIf="noData"><h1>Sem informação para mostrar...</h1></div>
 

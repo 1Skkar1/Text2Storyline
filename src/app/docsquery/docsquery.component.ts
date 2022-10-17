@@ -418,7 +418,7 @@ export class DocsQueryComponent implements OnInit {
     this.timeline
       .getTextKeyDateFromUrl(this.url, this.timelineOptions)
       .pipe(
-        timeout(15000),
+        timeout(120000),
         catchError(err => {
           console.log('Time-Matters Error: ', err);
           this.oops = true
@@ -435,10 +435,13 @@ export class DocsQueryComponent implements OnInit {
           console.log(res)
           this.result = res;
           let finalText = this.formatText(this.result.TextNormalized).replace(new RegExp('%','g'),'');
+          if (finalText.length >= 25000) {
+            finalText = finalText.substring(0,24999)
+          }
           this.wikifier
             .getWikifier(finalText)
             .pipe(
-              timeout(15000),
+              timeout(150000),
               catchError(err => {
                 console.log('Wikifier Error: ', err);
                 this.errorWikifier = true;
@@ -521,7 +524,6 @@ export class DocsQueryComponent implements OnInit {
 
   getDocs() {
     this.update();
-
     this.arquivo
       .getQuery(this.inp, this.arquivoOptions)
       .pipe(
@@ -609,7 +611,6 @@ export class DocsQueryComponent implements OnInit {
           this.getTopTen()
           let counter = 0
           this.wiki = []
-
 
           for (let i = 0; i < this.topTen.length; i++) {
             let finalText = this.topTen[i].text.replace(new RegExp('%','g'),'');
@@ -766,6 +767,7 @@ export class DocsQueryComponent implements OnInit {
             text: this.multidocScores[i].snippet,
             dateOG: this.multidocScores[i].tempOG,
             date: this.multidocScores[i].tempExpressions,
+            score: this.multidocScores[i].tempScores[0],
             url: this.multidocScores[i].url
           })
         }
@@ -785,6 +787,7 @@ export class DocsQueryComponent implements OnInit {
                 text: this.multidocScores[i].snippet,
                 dateOG: this.multidocScores[i].tempOG,
                 date: this.multidocScores[i].tempExpressions,
+                score: this.multidocScores[i].tempScores[0],
                 url: this.multidocScores[i].url
               })
               break;
@@ -829,125 +832,6 @@ export class DocsQueryComponent implements OnInit {
     }
   }
 
-  /*
-  public getTopScores() {
-    let top5_Scores = []
-    let top5_Dates = []
-    let top5_Indexes = []
-    let scores = Object.values(this.resultTimeMatters.Score)
-    let flag = false
-
-    for (let i = 0; i < scores.length; i++) {
-      flag = false
-      for (let j = 0; j < Object.keys(scores[i]).length; j++) {
-        let indJ = Object.keys(scores[i])[j]
-        for (let k = 0; k < Object.keys(scores[i][indJ]).length; k++) {
-          let indJK = Object.keys(scores[i][indJ])[k]
-          if (!top5_Indexes.includes(indJK)) {
-            if (top5_Scores.length < 5) {
-              top5_Scores.push(scores[i][0])
-              top5_Dates.push(scores[i][indJ][indJK][0])
-              top5_Indexes.push(indJK)
-              flag = true
-              break
-            }
-            else if (top5_Scores.length == 5) {
-              this.sortStack(top5_Scores, top5_Dates, top5_Indexes)
-              if (scores[i][0] > top5_Scores[0]) {
-                top5_Scores.shift()
-                top5_Dates.shift()
-                top5_Indexes.shift()
-                top5_Scores.push(scores[i][0])
-                top5_Dates.push(scores[i][indJ][indJK][0])
-                top5_Indexes.push(indJK)
-                flag = true
-                break
-              }
-            }
-          }
-        }
-        if (flag) {
-          break
-        }
-      }
-    }
-    this.sortDates(top5_Dates, top5_Indexes)
-    console.log(top5_Scores)
-    console.log(top5_Dates)
-    console.log(top5_Indexes)
-    //this.readURLs()
-    this.getSummary()
-  }
-
-  public sortDates(dates, indexes) {
-    const merged = [];
-    for (let i = 0; i < indexes.length; ++i) {
-      merged.push([indexes[i], dates[i]]);
-    }
-    merged.sort((a,b) => +new  Date(a[1]) - +new Date(b[1]));
-    for (const mergedValue of merged) {
-      this.indexes.push(mergedValue[0]);
-      this.dates.push(mergedValue[1]);
-    }
-  }
-
-  public getSummary() {
-    for (let i = 0; i < this.indexes.length; i++) {
-      let summary = this.resultArquivo[1][this.indexes[i]].Summary_Newspaper3k
-      this.summary.push(summary)
-      this.requestMade = true;
-      this.result = this.resultTimeMatters
-      this.update();
-      this.loading = false;
-      this.loaded.emit(false);
-    }
-  }
-
-  public readURLs() {
-    for (let i = 0; i < this.indexes.length; i++) {
-      let link = this.urls[this.indexes[i]].replace("wayback", "noFrame/replay")
-      this.url_5.push(link)
-    }
-    this.enableSettingsSD()
-    this.getSummary()
-  }
-
-  public getSummary() {
-    let fullText: string;
-    this.enableSettingsSD()
-    for (let i = 0; i < this.url_5.length; i++) {
-      this.timeline
-        .getTextKeyDateFromUrl(this.url_5[i], this.timelineOptions)
-        .pipe(take(1))
-        .subscribe((res) => {
-          if (res.message == "success") {
-            fullText = res.SentencesNormalized;
-            this.extractExpression(fullText, this.dates[i]);
-          }
-          if (i == 4) {
-            this.requestMade = true;
-            this.result = this.resultTimeMatters
-            this.update();
-            this.loading = false;
-            this.loaded.emit(false);
-          }
-        });
-    }
-  }
-
-  public extractExpression(text, date) {
-    for (let i = 0; i < text.length; i++) {
-      if (text[i].includes(date)) {
-        this.summary.push(text[i])
-      }
-    }
-    //console.log(this.dates)
-    //console.log(this.indexes)
-    //console.log(this.url_5)
-    //console.log(this.summary)
-  }
-  */
-
   public sortStack(scores, dates, indexes) {
     if (scores.length > 0) {
       const scoreT = scores.pop();
@@ -976,6 +860,7 @@ export class DocsQueryComponent implements OnInit {
   }
 
   resetValues() {
+    this.isQueried = false;
     this.url = "";
     this.inp = "";
     this.errorCode = "";
@@ -1163,6 +1048,19 @@ export class DocsQueryComponent implements OnInit {
     else {
       this.router.navigate(['texto-livre']).then(r => '')
       location.reload();
+    }
+  }
+
+  switchLanguage() {
+    let pt = (<HTMLInputElement>document.getElementById('ptFlag'))
+    let eng = (<HTMLInputElement>document.getElementById('engFlag'))
+    if (pt.style.display === "block") {
+      eng.style.display = "block"
+      pt.style.display = "none"
+    }
+    else {
+      eng.style.display = "none"
+      pt.style.display = "block"
     }
   }
 

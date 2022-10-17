@@ -13,6 +13,7 @@ export class WordcloudComponent implements OnInit {
   @Input() queryType: string;
   @Input() multidocFiles: any;
   @Input() topTen: any;
+  @Input() lang: string;
 
   public loading: boolean;
   public error: boolean;
@@ -61,8 +62,7 @@ export class WordcloudComponent implements OnInit {
   }
 
   getWordCloudSingle(){
-    let text = this.args.TextNormalized
-
+    let text = this.formatText(this.args.TextNormalized)
     this.yake
       .getKeywords(text,3,30)
       .pipe(
@@ -79,14 +79,14 @@ export class WordcloudComponent implements OnInit {
           console.log(res)
           this.keywords = res.keywords
           this.yake
-            .getWordCloud(this.keywords)
+            .getWordCloud(this.keywords, this.lang)
             .pipe(
               timeout(10000),
               catchError(err => {
                 console.log('WordCloud Error: ', err);
-                this.error = true;
+                this.error = true
                 this.loading = false
-                return " ";
+                return " "
               }),
               take(1))
             .subscribe( (resWC) => {
@@ -117,7 +117,7 @@ export class WordcloudComponent implements OnInit {
           console.log(res)
           this.keywords = res.keywords
           this.yake
-            .getWordCloud(this.keywords)
+            .getWordCloud(this.keywords, this.lang)
             .pipe(
               timeout(10000),
               catchError(err => {

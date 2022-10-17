@@ -2,6 +2,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TimelineService } from "../services/timeline.service";
 import { WikifierService } from "../services/wikifier.service";
+import { LangDetectService } from "../services/langdetect.service";
 import { YakeService } from "../services/yake.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatDialog } from "@angular/material/dialog";
@@ -34,8 +35,8 @@ export class FreetextComponent implements OnInit {
   public documentTypeOptions: Array<any>;
   public documentTypeSelected: string;
   public documentCreationTime: string;
-  public languageOptions: Array<string>;
-  public languagueSelected: string;
+  public langOptions: Array<string>;
+  public langSelected: string;
   public dateBegin: number;
   public dateEnd: number;
   public byDocOrSentece: boolean;
@@ -52,7 +53,8 @@ export class FreetextComponent implements OnInit {
   public contextWindow: any;
   public simbaValue: number;
   public cheating: boolean;
-  public showOnlyRel: boolean;
+  public showOnlyRelAT: boolean;
+  public showOnlyRelTC: boolean;
   public showOnlyRelSnap: boolean;
   public differentValues: Array<any>;
   public differentRelValues: Array<any>;
@@ -77,6 +79,7 @@ export class FreetextComponent implements OnInit {
     private yake: YakeService,
     private timeline: TimelineService,
     private wikifier: WikifierService,
+    private langdetect: LangDetectService,
     private _snackBar: MatSnackBar,
     public dialog: MatDialog
   ) {
@@ -111,7 +114,7 @@ export class FreetextComponent implements OnInit {
     Na justificação para o pedido de impeachment, os juristas alegaram que a então presidente havia cometido crime de responsabilidade pela prática das chamadas "pedaladas fiscais" e pela edição de decretos de abertura de crédito sem a autorização do Congresso.
     A acusação argumentou que os decretos autorizaram suplementação do orçamento em mais de R$ 95 bilhões e contribuíram para o descumprimento da meta fiscal de 2015. Disseram que o governo sabia da irregularidade porque já havia pedido revisão da meta quando editou os decretos e que o Legislativo não tinha sido consultado, como deveria ter sido feito antes da nova meta ser aprovada.
     Em relação às pedaladas, a acusação disse que não foram apenas atrasos operacionais porque o débito do Tesouro com os bancos públicos se acumulou por longo tempo e chegou a valores muito altos. Segundo os juristas, o acúmulo dos débitos serviu para fabricar superavit fiscal que não existia e para criar uma situação positiva das contas públicas que não era verdadeira. O objetivo das "pedaladas", como afirmaram, teria sido, portanto, esconder a real situação fiscal do país.
-    A defesa, por sua vez, afirmou que os decretos de crédito suplementar foram baseados em remanejamento de recursos, excesso de arrecadação ou superavit financeiro, ou seja, não significaram aumento de despesa. Para os defensores de Dilma, os atrasos no pagamento da equalização de taxas de juros do Plano Safra não podiam ser considerados empréstimos porque o dinheiro é emprestado aos agricultores e não ao governo
+    A defesa, por sua vez, afirmou que os decretos de crédito suplementar foram baseados em remanejamento de recursos, excesso de arrecadação ou superavit financeiro, ou seja, não significaram aumento de despesa. Para os defensores de Dilma, os atrasos no pagamento da equalização de taxas de juros do Plano Safra não podiam ser considerados empréstimos porque o dinheiro é emprestado aos agricultores e não ao governo.
     `,
 
       `The Boston Marathon bombing was a terrorist attack, followed by subsequent related shootings, that occurred when two pressure cooker bombs exploded during the Boston Marathon on April 15, 2013. The bombs exploded about 12 seconds and 210 yards (190 m) apart at 2:49 pm EDT, near the marathon's finish line on Boylston Street. The explosion killed 3 civilians and injured an estimated 264 others.
@@ -140,7 +143,7 @@ export class FreetextComponent implements OnInit {
       ["scientific", "documents with a local time frame (e.g., clinical trials)"],
     ];
     this.documentTypeSelected = this.documentTypeOptions[0][0];
-    this.languageOptions = [
+    this.langOptions = [
       "auto-detect",
       "English",
       "Portuguese",
@@ -150,7 +153,7 @@ export class FreetextComponent implements OnInit {
       "Italian",
       "French",
     ];
-    this.languagueSelected = this.languageOptions[0];
+    this.langSelected = this.langOptions[0];
     this.maxValTH = 1;
     this.dateBegin = 0;
     this.dateEnd = 2100;
@@ -158,8 +161,8 @@ export class FreetextComponent implements OnInit {
     this.contextWindow = "full_sentence";
     this.simbaValue = 10;
     this.cheating = false;
-    this.showOnlyRel = true;
-    this.showOnlyRelSnap = true;
+    this.showOnlyRelAT = true;
+    this.showOnlyRelTC = true;
     this.TH = 0.05;
     this.wiki = [];
     this.df = [];
@@ -183,9 +186,12 @@ export class FreetextComponent implements OnInit {
     this.hiddenoptionTM = !this.hiddenoptionTM;
   }
 
-  toggleRel() {
-    this.showOnlyRel = !this.showOnlyRel;
-    //this.showOnlyRelSnap = this.showOnlyRel;
+  toggleRelAT() {
+    this.showOnlyRelAT = !this.showOnlyRelAT;
+  }
+
+  toggleRelTC() {
+    this.showOnlyRelTC = !this.showOnlyRelTC;
   }
 
   changeTH(event: any) {
@@ -280,7 +286,7 @@ export class FreetextComponent implements OnInit {
   }
 
   selecionarLanguage(event: any) {
-    this.languagueSelected = event;
+    this.langSelected = event;
   }
 
   setDefaultText(num: number, language: string) {
@@ -293,56 +299,36 @@ export class FreetextComponent implements OnInit {
   }
 
   public copyToClipboard(event: any) {
-    event.preventDefault();
-    if (!this.withKeywords) {
-      this._snackBar.open(
-        "Message copied to Clipboard",
-        "Length: " + this.result.TextNormalized.length + " characters",
-        {
-          duration: 2000,
-        }
-      );
-      const clipboard = document.createElement("input");
-      clipboard.setAttribute("value", this.result.TextNormalized);
-      document.body.appendChild(clipboard);
-      clipboard.select();
-      document.execCommand("copy");
-      document.body.removeChild(clipboard);
-    }
-    else {
-      this._snackBar.open(
-        "Message copied to Clipboard",
-        "Length: " +
-        this.result.TextNormalized.split("<kw>")
-          .join("")
-          .split("</kw>")
-          .join("").length +
-        " characters",
-        {
-          duration: 2000,
-        }
-      );
-      const clipboard = document.createElement("input");
+    let copyText = this.result.TextNormalized
 
-      clipboard.setAttribute(
-        "value",
-        this.result.TextNormalized.split("<kw>")
-          .join("")
-          .split("</kw>")
-          .join("")
-      );
-      document.body.appendChild(clipboard);
-      clipboard.select();
-      document.execCommand("copy");
-      document.body.removeChild(clipboard);
+    copyText = copyText.replace(new RegExp("<kw>",'gi'), '')
+    copyText = copyText.replace(new RegExp("</kw>",'gi'), '')
+    copyText = copyText.replace(new RegExp("<d>",'gi'), '')
+    copyText = copyText.replace(new RegExp("</d>",'gi'), '')
+
+    for (let i = 0; i < this.result.TempExpressions.length; i++) {
+      copyText = copyText.replace(new RegExp(this.result.TempExpressions[i][0],'gi'), this.result.TempExpressions[i][1])
     }
+
+    event.preventDefault();
+    this._snackBar.open(
+      "Mensagem copiada para o clipboard",
+      "Tamanho: " + copyText.length + " carateres",
+      {duration: 2000}
+    );
+    const clipboard = document.createElement("input");
+    clipboard.setAttribute("value", copyText);
+    document.body.appendChild(clipboard);
+    clipboard.select();
+    document.execCommand("copy");
+    document.body.removeChild(clipboard);
   }
 
   goBack() {
     this.result = false;
     this.requestMade = false;
     this.loading = false;
-    this.languagueSelected = this.languageOptions[0];
+    this.langSelected = this.langOptions[0];
     this.withKeywords = true;
     this.withKeywordsSentence = "Keywords Off";
     this.oops=false;
@@ -354,7 +340,7 @@ export class FreetextComponent implements OnInit {
       this.numero_total = this.result.TempExpressions.length;
       this.numero_total2 = this.result.TempExpressions.filter((cada) => {
         let f1 = this.result.Score[cada[0].toLowerCase()];
-        return f1[Object.keys(this.result.Score[cada[0].toLowerCase()])[0]][0] > 0.5;
+        return f1[Object.keys(this.result.Score[cada[0].toLowerCase()])[0]][0] > 0.35;
       }).length;
       last = "";
       this.differentValues = this.result.TempExpressions.sort(
@@ -379,7 +365,7 @@ export class FreetextComponent implements OnInit {
           (element, index, array) => {
             const a = element[0].toLowerCase() + "";
             let f1 = this.result.Score[a];
-            return f1[Object.keys(this.result.Score[a])[0]][0] > 0.5;
+            return f1[Object.keys(this.result.Score[a])[0]][0] > 0.35;
           }
         );
       }
@@ -393,7 +379,7 @@ export class FreetextComponent implements OnInit {
         valores.map((kelp) => {
           Object.keys(this.result.SentencesTokens).map((kolp) => {
             if (this.result.Score[kelp][kolp + ""]) {
-              if (this.result.Score[kelp][kolp + ""][0] > 0.5) {
+              if (this.result.Score[kelp][kolp + ""][0] > 0.35) {
                 total2++;
               }
             }
@@ -472,13 +458,22 @@ export class FreetextComponent implements OnInit {
             return aasd.length != 0;
           })[0];
           let f1 = this.result.Score[Object.keys(this.result.Score)[i].toLowerCase()];
-          a =
-            '<p class="noticem5">Score: ' +
-            f1[Object.keys(this.result.Score[Object.keys(this.result.Score)[i].toLowerCase()])[0]][0] +
-            "</p><p>" +
-            sentence_to_write +
-            "</p>";
-          if (f1[Object.keys(this.result.Score[Object.keys(this.result.Score)[i].toLowerCase()])[0]][0] > 0.5) {
+          if (f1[Object.keys(this.result.Score[Object.keys(this.result.Score)[i].toLowerCase()])[0]][0] >= 0.9) {
+            a =
+              '<p class="noticem8">Score: ' +
+              f1[Object.keys(this.result.Score[Object.keys(this.result.Score)[i].toLowerCase()])[0]][0] +
+              "</p><p>" +
+              sentence_to_write +
+              "</p>";
+
+            a2 =
+              '<p class="noticem8">Score: ' +
+              f1[Object.keys(this.result.Score[Object.keys(this.result.Score)[i].toLowerCase()])[0]][0] +
+              "</p><p>" +
+              sentence_to_write +
+              "</p>";
+          }
+          else if (f1[Object.keys(this.result.Score[Object.keys(this.result.Score)[i].toLowerCase()])[0]][0] >= 0.7) {
             a =
               '<p class="noticem4">Score: ' +
               f1[Object.keys(this.result.Score[Object.keys(this.result.Score)[i].toLowerCase()])[0]][0] +
@@ -492,7 +487,48 @@ export class FreetextComponent implements OnInit {
               "</p><p>" +
               sentence_to_write +
               "</p>";
-          } else {
+          }
+
+          else if (f1[Object.keys(this.result.Score[Object.keys(this.result.Score)[i].toLowerCase()])[0]][0] >= 0.5) {
+            a =
+              '<p class="noticem6">Score: ' +
+              f1[Object.keys(this.result.Score[Object.keys(this.result.Score)[i].toLowerCase()])[0]][0] +
+              "</p><p>" +
+              sentence_to_write +
+              "</p>";
+
+            a2 =
+              '<p class="noticem6">Score: ' +
+              f1[Object.keys(this.result.Score[Object.keys(this.result.Score)[i].toLowerCase()])[0]][0] +
+              "</p><p>" +
+              sentence_to_write +
+              "</p>";
+          }
+
+          else if (f1[Object.keys(this.result.Score[Object.keys(this.result.Score)[i].toLowerCase()])[0]][0] >= 0.35) {
+            a =
+              '<p class="noticem5">Score: ' +
+              f1[Object.keys(this.result.Score[Object.keys(this.result.Score)[i].toLowerCase()])[0]][0] +
+              "</p><p>" +
+              sentence_to_write +
+              "</p>";
+
+            a2 =
+              '<p class="noticem5">Score: ' +
+              f1[Object.keys(this.result.Score[Object.keys(this.result.Score)[i].toLowerCase()])[0]][0] +
+              "</p><p>" +
+              sentence_to_write +
+              "</p>";
+          }
+
+          else {
+            a =
+              '<p class="noticem7">Score: ' +
+              f1[Object.keys(this.result.Score[Object.keys(this.result.Score)[i].toLowerCase()])[0]][0] +
+              "</p><p>" +
+              sentence_to_write +
+              "</p>";
+
             a2 = null;
           }
         }
@@ -529,7 +565,31 @@ export class FreetextComponent implements OnInit {
             );
             // tslint:disable-next-line: whitespace
             // tslint:disable-next-line: max-line-length
-            if (this.result.Score[Object.keys(this.result.Score)[i]][xd][0] > 0.5) {
+            if (this.result.Score[Object.keys(this.result.Score)[i]][xd][0] >= 0.9) {
+              // tslint:disable-next-line: whitespace
+              // tslint:disable-next-line: max-line-length
+              valorDeA +=
+                '<p class="noticem8">Score: ' +
+                this.result.Score[Object.keys(this.result.Score)[i]][xd][0] +
+                "</p><p>" +
+                sentence_to_write +
+                "</p>";
+
+              valorDeA2 +=
+                '<p class="noticem8">Score: ' +
+                this.result.Score[Object.keys(this.result.Score)[i]][xd][0] +
+                "</p><p>" +
+                sentence_to_write +
+                "</p>";
+
+              d2.push({
+                x: Object.keys(this.result.Score)[i],
+                y: this.result.Score[Object.keys(this.result.Score)[i]][xd][0],
+                series: xd,
+              });
+            }
+
+            else if (this.result.Score[Object.keys(this.result.Score)[i]][xd][0] >= 0.7) {
               // tslint:disable-next-line: whitespace
               // tslint:disable-next-line: max-line-length
               valorDeA +=
@@ -552,9 +612,58 @@ export class FreetextComponent implements OnInit {
                 series: xd,
               });
             }
-            else {
+
+            else if (this.result.Score[Object.keys(this.result.Score)[i]][xd][0] >= 0.5) {
+              // tslint:disable-next-line: whitespace
+              // tslint:disable-next-line: max-line-length
+              valorDeA +=
+                '<p class="noticem6">Score: ' +
+                this.result.Score[Object.keys(this.result.Score)[i]][xd][0] +
+                "</p><p>" +
+                sentence_to_write +
+                "</p>";
+
+              valorDeA2 +=
+                '<p class="noticem6">Score: ' +
+                this.result.Score[Object.keys(this.result.Score)[i]][xd][0] +
+                "</p><p>" +
+                sentence_to_write +
+                "</p>";
+
+              d2.push({
+                x: Object.keys(this.result.Score)[i],
+                y: this.result.Score[Object.keys(this.result.Score)[i]][xd][0],
+                series: xd,
+              });
+            }
+
+            else if (this.result.Score[Object.keys(this.result.Score)[i]][xd][0] >= 0.35) {
+              // tslint:disable-next-line: whitespace
+              // tslint:disable-next-line: max-line-length
               valorDeA +=
                 '<p class="noticem5">Score: ' +
+                this.result.Score[Object.keys(this.result.Score)[i]][xd][0] +
+                "</p><p>" +
+                sentence_to_write +
+                "</p>";
+
+              valorDeA2 +=
+                '<p class="noticem5">Score: ' +
+                this.result.Score[Object.keys(this.result.Score)[i]][xd][0] +
+                "</p><p>" +
+                sentence_to_write +
+                "</p>";
+
+              d2.push({
+                x: Object.keys(this.result.Score)[i],
+                y: this.result.Score[Object.keys(this.result.Score)[i]][xd][0],
+                series: xd,
+              });
+            }
+
+            else {
+              valorDeA +=
+                '<p class="noticem7">Score: ' +
                 this.result.Score[Object.keys(this.result.Score)[i]][xd][0] +
                 "</p><p>" +
                 sentence_to_write +
@@ -672,12 +781,12 @@ export class FreetextComponent implements OnInit {
         return cada.y.includes("<strong");
       });
     }
-    console.log(this.datasetFixed)
-    console.log(this.datasetFixed.length)
-    console.log(this.datasetFixed2)
+
     for (let i = 0; i < this.datasetFixed.length; i++) {
-      console.log(this.datasetFixed[i].y)
       let score = this.datasetFixed[i].y.split("<\/p>")
+      if (this.datasetFixed[i].x.includes('t')) {
+        this.datasetFixed[i].x = this.datasetFixed[i].x.replace('t', '\n')
+      }
       let data = {
         "date": this.datasetFixed[i].x,
         "text": score[1] + "<\/p>",
@@ -687,6 +796,9 @@ export class FreetextComponent implements OnInit {
     }
     for (let i = 0; i < this.datasetFixed2.length; i++) {
       let score = this.datasetFixed2[i].y.split("<\/p>")
+      if (this.datasetFixed2[i].x.includes('t')) {
+        this.datasetFixed2[i].x = this.datasetFixed2[i].x.replace('t', '\n')
+      }
       let data = {
         "date": this.datasetFixed2[i].x,
         "text": score[1] + "<\/p>",
@@ -694,6 +806,8 @@ export class FreetextComponent implements OnInit {
       }
       this.df2.push(data)
     }
+    //console.log(this.df)
+    //console.log(this.df2)
   }
 
   public getKeyword(event: any) {
@@ -707,18 +821,53 @@ export class FreetextComponent implements OnInit {
 
     this.loading = true;
 
+    this.langdetect
+      .getLanguage(this.conteudoDefault)
+      .pipe(take(1))
+      .subscribe((res) => {
+        if (!res) {
+          this.langSelected = "Portuguese";
+        }
+        switch (res.lang) {
+          case "en":
+            this.langSelected = "English";
+            break;
+          case "fr":
+            this.langSelected = "French";
+            break;
+          case "pt":
+            this.langSelected = "Portuguese";
+            break;
+          case "ge":
+            this.langSelected = "German";
+            break;
+          case "it":
+            this.langSelected = "Italian";
+            break;
+          case "nl":
+            this.langSelected = "Dutch";
+            break;
+          case "es":
+            this.langSelected = "Spanish";
+            break;
+          default:
+            this._snackBar.open("Idioma não suportado: ", res.lang, {
+              duration: 2000,
+            });
+            break;
+        }
+      });
+
     let j, k;
 
     if (this.contextFullSentence) {
       j = "full_sentence";
-    }
-    else {
+    } else {
       j = this.contextWindow;
     }
     if (this.simbaValueMax) {
       k = "max";
-    }
-    else {
+    } else {
       k = this.simbaValue;
     }
 
@@ -728,7 +877,7 @@ export class FreetextComponent implements OnInit {
       docOrSentence: this.byDocOrSentece ? "doc" : "sentence",
       algo: this.algoritmoSelected,
       ngram: this.ngramSelected,
-      language: this.languagueSelected,
+      language: this.langSelected,
       numberOfKeywords: this.numberOfKeyWords,
       nContextualWindow: j,
       documentType: this.documentTypeSelected,
@@ -758,7 +907,7 @@ export class FreetextComponent implements OnInit {
                 }),
                 take(1))
               .subscribe((res) => {
-                console.log(res)
+                //console.log(res)
                 if (!res.error) {
                   this.wiki = res;
                 }

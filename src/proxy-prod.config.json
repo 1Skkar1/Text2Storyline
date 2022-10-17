@@ -5,16 +5,15 @@
     "changeOrigin": true,
     "logLevel": "debug"
   },
-  "/wikifier": {
-    "target": "https://www.wikifier.org/annotate-article",
-    "pathRewrite": { "^/wikifier": "" },
-    "secure": false,
+  "/languageDetection": {
+    "target": "https://tm-websuiteapps.ipt.pt/",
+    "secure": true,
     "changeOrigin": true,
     "logLevel": "debug"
   },
-  "/dbpedia": {
-    "target": "https://api.dbpedia-spotlight.org/pt/annotate",
-    "pathRewrite": { "^/dbpedia": "" },
+  "/wikifier": {
+    "target": "https://www.wikifier.org/annotate-article",
+    "pathRewrite": { "^/wikifier": "" },
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"

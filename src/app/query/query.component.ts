@@ -34,7 +34,8 @@ export class QueryComponent implements OnChanges {
 
   public related: Array<any>;
   public loadingRelated: boolean;
-  public showOnlyRel: boolean;
+  public showOnlyRelAT: boolean;
+  public showOnlyRelTC: boolean;
   public withKeywords: boolean;
   public withKeywordsSentence: string;
   public withEntities: boolean;
@@ -47,12 +48,24 @@ export class QueryComponent implements OnChanges {
     date: string;
     text: string;
     score: string;
-  }]
+  }];
   public df2: [{
     date: string;
     text: string;
     score: string;
-  }]
+  }];
+  public multidf: [{
+    fakeDate: any;
+    date: string;
+    text: string;
+    score: string;
+  }];
+  public multidf2: [{
+    fakeDate: any;
+    date: string;
+    text: string;
+    score: string;
+  }];
   public datasetRelOnly: Array<any>;
   public differentValues: Array<any>;
   public differentRelValues: Array<any>;
@@ -67,13 +80,6 @@ export class QueryComponent implements OnChanges {
   public multiLen: number;
   public multidocDecoy: any;
   public multidocSpliced: any;
-  public wikiData: [{
-    title: string;
-    url: string;
-    class: string;
-    image: string;
-    text: string;
-  }];
   public singleNarr: boolean;
   public loadingSingleNarr: boolean;
   public errorSingleNarr: boolean;
@@ -104,7 +110,8 @@ export class QueryComponent implements OnChanges {
     this.withEntities = true;
     this.withEntitiesSentence = "Entities Off";
     this.sortBy = "scores"
-    this.showOnlyRel = true;
+    this.showOnlyRelAT = true;
+    this.showOnlyRelTC = true;
     this.differentValues = [];
     this.page = 0;
     this.score = "doc";
@@ -113,6 +120,10 @@ export class QueryComponent implements OnChanges {
     this.df = [];
     // @ts-ignore
     this.df2 = [];
+    // @ts-ignore
+    this.multidf = [];
+    // @ts-ignore
+    this.multidf2 = [];
     this.loadingSingleNarr = false;
     this.errorSingleNarr = false;
     this.errorWikifierSingleNarr = false;
@@ -167,35 +178,25 @@ export class QueryComponent implements OnChanges {
   }
 
   public copyToClipboard(event: any) {
+    let copyText = this.options.result.TextNormalized
+
+    copyText = copyText.replace(new RegExp("<kw>",'gi'), '')
+    copyText = copyText.replace(new RegExp("</kw>",'gi'), '')
+    copyText = copyText.replace(new RegExp("<d>",'gi'), '')
+    copyText = copyText.replace(new RegExp("</d>",'gi'), '')
+
+    for (let i = 0; i < this.options.result.TempExpressions.length; i++) {
+      copyText = copyText.replace(new RegExp(this.options.result.TempExpressions[i][0],'gi'), this.options.result.TempExpressions[i][1])
+    }
+
     event.preventDefault();
     this._snackBar.open(
       "Mensagem copiada para o clipboard",
-      "Tamanho: " +
-      this.options.result.TextNormalized.split("<kw>")
-        .join("")
-        .split("</kw>")
-        .join("")
-        .split("<d>")
-        .join("")
-        .split("</d>")
-        .join("").length +
-      " characters",
-      {
-        duration: 2000,
-      }
+      "Tamanho: " + copyText.length + " carateres",
+      {duration: 2000}
     );
     const clipboard = document.createElement("input");
-    clipboard.setAttribute(
-      "value",
-      this.options.result.TextNormalized.split("<kw>")
-        .join("")
-        .split("</kw>")
-        .join("")
-        .split("<d>")
-        .join("")
-        .split("</d>")
-        .join("")
-    );
+    clipboard.setAttribute("value", copyText);
     document.body.appendChild(clipboard);
     clipboard.select();
     document.execCommand("copy");
@@ -222,12 +223,12 @@ export class QueryComponent implements OnChanges {
     let last = "";
     this.numTotal = this.options.result.TempExpressions.length;
     this.numTotal2 = this.options.result.TempExpressions.filter((cada) => {
-      return cada[1] > 0.5;
+      return cada[1] > 0.35;
     }).length;
 
     this.numTotal = this.options.result.TempExpressions.length;
     this.numTotal2 = this.options.result.TempExpressions.filter((cada) => {
-      return this.options.result.Score[cada[0].toLowerCase()][0] > 0.5;
+      return this.options.result.Score[cada[0].toLowerCase()][0] > 0.35;
     }).length;
     last = "";
     this.differentValues = this.options.result.TempExpressions.sort(
@@ -253,7 +254,7 @@ export class QueryComponent implements OnChanges {
           // tslint:disable-next-line: no-shadowed-variable
           last = element[0];
           const a = element[0].toLowerCase() + "";
-          return this.options.result.Score[a][0] > 0.5;
+          return this.options.result.Score[a][0] > 0.35;
         }
       );
     }
@@ -269,7 +270,7 @@ export class QueryComponent implements OnChanges {
       valores.map((kelp) => {
         Object.keys(this.options.result.SentencesTokens).map((kolp) => {
           if (this.options.result.Score[kelp][kolp + ""]) {
-            if (this.options.result.Score[kelp][kolp + ""][0] > 0.5) {
+            if (this.options.result.Score[kelp][kolp + ""][0] > 0.35) {
               total2++;
             }
           }
@@ -371,7 +372,33 @@ export class QueryComponent implements OnChanges {
         if (
           this.options.result.Score[
             Object.keys(this.options.result.Score)[i]
-            ][0] > 0.5
+            ][0] >= 0.9
+        ) {
+          a =
+            '<p class="noticem8">Score: ' +
+            this.options.result.Score[
+              Object.keys(this.options.result.Score)[i]
+              ][0] +
+            "</p><p>" +
+            sentence_to_write +
+            "</p>";
+
+          a2 =
+            '<p class="noticem8">Score: ' +
+            this.options.result.Score[
+              Object.keys(this.options.result.Score)[i]
+              ][0] +
+            "</p><p>" +
+            sentence_to_write +
+            "</p>";
+
+          // tslint:disable-next-line: max-line-length
+        }
+        // tslint:disable-next-line: max-line-length
+        else if (
+          this.options.result.Score[
+            Object.keys(this.options.result.Score)[i]
+            ][0] >= 0.7
         ) {
           a =
             '<p class="noticem4">Score: ' +
@@ -393,7 +420,67 @@ export class QueryComponent implements OnChanges {
 
           // tslint:disable-next-line: max-line-length
         }
+        // tslint:disable-next-line: max-line-length
+        else if (
+          this.options.result.Score[
+            Object.keys(this.options.result.Score)[i]
+            ][0] >= 0.5
+        ) {
+          a =
+            '<p class="noticem6">Score: ' +
+            this.options.result.Score[
+              Object.keys(this.options.result.Score)[i]
+              ][0] +
+            "</p><p>" +
+            sentence_to_write +
+            "</p>";
+
+          a2 =
+            '<p class="noticem6">Score: ' +
+            this.options.result.Score[
+              Object.keys(this.options.result.Score)[i]
+              ][0] +
+            "</p><p>" +
+            sentence_to_write +
+            "</p>";
+
+          // tslint:disable-next-line: max-line-length
+        }
+        // tslint:disable-next-line: max-line-length
+        else if (
+          this.options.result.Score[
+            Object.keys(this.options.result.Score)[i]
+            ][0] >= 0.35
+        ) {
+          a =
+            '<p class="noticem5">Score: ' +
+            this.options.result.Score[
+              Object.keys(this.options.result.Score)[i]
+              ][0] +
+            "</p><p>" +
+            sentence_to_write +
+            "</p>";
+
+          a2 =
+            '<p class="noticem5">Score: ' +
+            this.options.result.Score[
+              Object.keys(this.options.result.Score)[i]
+              ][0] +
+            "</p><p>" +
+            sentence_to_write +
+            "</p>";
+
+          // tslint:disable-next-line: max-line-length
+        }
         else {
+          a =
+            '<p class="noticem7">Score: ' +
+            this.options.result.Score[
+              Object.keys(this.options.result.Score)[i]
+              ][0] +
+            "</p><p>" +
+            sentence_to_write +
+            "</p>";
           a2 = '';
         }
       }
@@ -442,7 +529,46 @@ export class QueryComponent implements OnChanges {
           if (
             this.options.result.Score[
               Object.keys(this.options.result.Score)[i]
-              ][xd][0] > 0.5
+              ][xd][0] >= 0.9
+          ) {
+            // tslint:disable-next-line: whitespace
+            // tslint:disable-next-line: max-line-length
+            valorDeA +=
+              '<span title="' +
+              sentence_to_write +
+              '"><p class="noticem8">Score: ' +
+              this.options.result.Score[
+                Object.keys(this.options.result.Score)[i]
+                ][xd][0] +
+              "</p><p>" +
+              sentence_to_write +
+              "</p></span>";
+
+            valorDeA2 +=
+              '<span title="' +
+              sentence_to_write +
+              '"><p class="noticem8">Score: ' +
+              this.options.result.Score[
+                Object.keys(this.options.result.Score)[i]
+                ][xd][0] +
+              "</p><p>" +
+              sentence_to_write +
+              "</p></span>";
+
+            // tslint:disable-next-line: max-line-length
+            d.push({
+              x: Object.keys(this.options.result.Score)[i],
+              y: this.options.result.Score[
+                Object.keys(this.options.result.Score)[i]
+                ][xd][0],
+              series: xd,
+            });
+          }
+          // tslint:disable-next-line: max-line-length
+          else if (
+            this.options.result.Score[
+              Object.keys(this.options.result.Score)[i]
+              ][xd][0] >= 0.7
           ) {
             // tslint:disable-next-line: whitespace
             // tslint:disable-next-line: max-line-length
@@ -477,11 +603,89 @@ export class QueryComponent implements OnChanges {
               series: xd,
             });
           }
-          else {
+          // tslint:disable-next-line: max-line-length
+          else if (
+            this.options.result.Score[
+              Object.keys(this.options.result.Score)[i]
+              ][xd][0] >= 0.5
+          ) {
+            // tslint:disable-next-line: whitespace
+            // tslint:disable-next-line: max-line-length
+            valorDeA +=
+              '<span title="' +
+              sentence_to_write +
+              '"><p class="noticem6">Score: ' +
+              this.options.result.Score[
+                Object.keys(this.options.result.Score)[i]
+                ][xd][0] +
+              "</p><p>" +
+              sentence_to_write +
+              "</p></span>";
+
+            valorDeA2 +=
+              '<span title="' +
+              sentence_to_write +
+              '"><p class="noticem6">Score: ' +
+              this.options.result.Score[
+                Object.keys(this.options.result.Score)[i]
+                ][xd][0] +
+              "</p><p>" +
+              sentence_to_write +
+              "</p></span>";
+
+            // tslint:disable-next-line: max-line-length
+            d.push({
+              x: Object.keys(this.options.result.Score)[i],
+              y: this.options.result.Score[
+                Object.keys(this.options.result.Score)[i]
+                ][xd][0],
+              series: xd,
+            });
+          }
+          // tslint:disable-next-line: max-line-length
+          else if (
+            this.options.result.Score[
+              Object.keys(this.options.result.Score)[i]
+              ][xd][0] >= 0.35
+          ) {
+            // tslint:disable-next-line: whitespace
+            // tslint:disable-next-line: max-line-length
             valorDeA +=
               '<span title="' +
               sentence_to_write +
               '"><p class="noticem5">Score: ' +
+              this.options.result.Score[
+                Object.keys(this.options.result.Score)[i]
+                ][xd][0] +
+              "</p><p>" +
+              sentence_to_write +
+              "</p></span>";
+
+            valorDeA2 +=
+              '<span title="' +
+              sentence_to_write +
+              '"><p class="noticem5">Score: ' +
+              this.options.result.Score[
+                Object.keys(this.options.result.Score)[i]
+                ][xd][0] +
+              "</p><p>" +
+              sentence_to_write +
+              "</p></span>";
+
+            // tslint:disable-next-line: max-line-length
+            d.push({
+              x: Object.keys(this.options.result.Score)[i],
+              y: this.options.result.Score[
+                Object.keys(this.options.result.Score)[i]
+                ][xd][0],
+              series: xd,
+            });
+          }
+          else {
+            valorDeA +=
+              '<span title="' +
+              sentence_to_write +
+              '"><p class="noticem7">Score: ' +
               this.options.result.Score[
                 Object.keys(this.options.result.Score)[i]
                 ][xd][0] +
@@ -496,7 +700,7 @@ export class QueryComponent implements OnChanges {
       b = Object.keys(this.options.result.Score)[i];
 
       let nop = d.filter((a) => {
-        return a.y > 0.5;
+        return a.y > 0.35;
       });
       c2.push({ x: b, y: a2, z: nop });
       c.push({ x: b, y: a, z: d });
@@ -627,8 +831,10 @@ export class QueryComponent implements OnChanges {
       }
       this.df.push(data)
     }
+
     for (let i = 0; i < this.datasetFixed2.length; i++) {
       let score = this.datasetFixed2[i].y.split("<\/p>")
+      console.log(this.datasetFixed2[i].x)
       let data = {
         "date": this.datasetFixed2[i].x,
         "text": score[1] + "<\/p>",
@@ -636,19 +842,160 @@ export class QueryComponent implements OnChanges {
       }
       this.df2.push(data)
     }
+    //console.log(this.df)
+    //console.log(this.df2)
   }
 
   updateMultiple() {
     if (this.sortBy == "dates") {
       this.multidocDecoy = this.multidocDates
-      this.multidocSpliced = this.multidocDecoy.splice(0,10)
-      this.multiLen = this.multidocFiles.map(a => a.title).length
+      //this.multidocSpliced = this.multidocDecoy.splice(0,10)
+      //this.multiLen = this.multidocFiles.map(a => a.title).length
     }
     else {
       this.multidocDecoy = this.multidocScores
-      this.multidocSpliced = this.multidocDecoy.splice(0,10)
-      this.multiLen = this.multidocFiles.map(a => a.title).length
+      //this.multidocSpliced = this.multidocDecoy.splice(0,10)
+      //this.multiLen = this.multidocFiles.map(a => a.title).length
     }
+    let indexDate = []
+    let fakeTopTen = this.topTen
+    let score = ''
+    let date = ''
+    let text = ''
+
+    for (let i = 0; i < fakeTopTen.length; i++) {
+      let irrelevant = 0
+      for (let j = 0; j < fakeTopTen[i].date.length; j++) {
+        if (fakeTopTen[i].dateOG[j].length > 4) {
+          if (fakeTopTen[i].text.includes(fakeTopTen[i].dateOG[j])) {
+            fakeTopTen[i].text = fakeTopTen[i].text.replace(new RegExp(fakeTopTen[i].dateOG[j], 'g'), "<b>" + fakeTopTen[i].dateOG[j] + "</b>")
+            indexDate.push(j);
+            text = '<p>' + fakeTopTen[i].text.charAt(0).toUpperCase() + fakeTopTen[i].text.slice(1) + '</p>'
+            date = fakeTopTen[i].dateOG[j]
+            if (fakeTopTen[i].score >= 0.9) {
+              score = '<p class="noticem8">Score: ' + fakeTopTen[i].score + '</p>'
+            } else if (this.topTen[i].score >= 0.7) {
+              score = '<p class="noticem4">Score: ' + fakeTopTen[i].score + '</p>'
+            } else if (this.topTen[i].score >= 0.5) {
+              score = '<p class="noticem6">Score: ' + fakeTopTen[i].score + '</p>'
+            } else if (this.topTen[i].score >= 0.35) {
+              score = '<p class="noticem5">Score: ' + fakeTopTen[i].score + '</p>'
+            } else {
+              score = '<p class="noticem7">Score: ' + fakeTopTen[i].score + '</p>'
+              irrelevant = 1
+            }
+            break;
+          }
+        }
+      }
+      if (indexDate.length == i) {
+        for (let j = 0; j < fakeTopTen[i].date.length; j++) {
+          irrelevant = 0
+          if (fakeTopTen[i].text.includes(this.topTen[i].dateOG[j])) {
+            fakeTopTen[i].text = fakeTopTen[i].text.replace(new RegExp(fakeTopTen[i].dateOG[j], 'g'), "<b>" + fakeTopTen[i].dateOG[j] + "</b>")
+            indexDate.push(j);
+            text = '<p>' + fakeTopTen[i].text.charAt(0).toUpperCase() + fakeTopTen[i].text.slice(1) + '</p>'
+            date = fakeTopTen[i].dateOG[j]
+            if (fakeTopTen[i].score >= 0.9) {
+              score = '<p class="noticem8">Score: ' + fakeTopTen[i].score + '</p>'
+            } else if (this.topTen[i].score >= 0.7) {
+              score = '<p class="noticem4">Score: ' + fakeTopTen[i].score + '</p>'
+            } else if (this.topTen[i].score >= 0.5) {
+              score = '<p class="noticem6">Score: ' + fakeTopTen[i].score + '</p>'
+            } else if (this.topTen[i].score >= 0.35) {
+              score = '<p class="noticem5">Score: ' + fakeTopTen[i].score + '</p>'
+            } else {
+              score = '<p class="noticem7">Score: ' + fakeTopTen[i].score + '</p>'
+              irrelevant = 1
+            }
+            break;
+          }
+        }
+      }
+      if (indexDate.length == i) {
+        indexDate.push(0);
+      }
+      //const options = {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'};
+      // date = new Date(date).toLocaleDateString('pt-PT', options)
+      let dayDate, monthDate, yearDate = 0
+      let token = 0
+      if (date.length == 8 || date.length == 10) {
+        token = 1
+        if (date.includes('.')) {
+          dayDate = parseInt(date.split('.')[0])
+          monthDate = parseInt(date.split('.')[1]) - 1
+          yearDate = parseInt(date.split('.')[2])
+        }
+        else if (date.includes('/')) {
+          dayDate = parseInt(date.split('/')[0])
+          monthDate = parseInt(date.split('/')[1]) - 1
+          yearDate = parseInt(date.split('/')[2])
+        }
+        else if (date.includes('-')) {
+          dayDate = parseInt(date.split('-')[0])
+          monthDate = parseInt(date.split('-')[1]) - 1
+          yearDate = parseInt(date.split('-')[2])
+        }
+      }
+      else if (date.length == 4) {
+        dayDate = 0o1
+        monthDate = 0o0
+        yearDate = parseInt(date)
+      }
+      else if (date.length == 7 || date.length == 9) {
+        if (date.includes('.')) {
+          dayDate = 0o1
+          monthDate = 0o0
+          yearDate = parseInt(date.split('.')[0])
+        }
+        else if (date.includes('/')) {
+          dayDate = 0o1
+          monthDate = 0o0
+          yearDate = parseInt(date.split('/')[0])
+        }
+        else if (date.includes('-')) {
+          dayDate = 0o1
+          monthDate = 0o0
+          yearDate = parseInt(date.split('-')[0])
+        }
+      }
+
+      let fakeDate = ''
+      if (token == 1) {
+        fakeDate = new Date(yearDate,monthDate,dayDate).toLocaleDateString('pt-PT')
+        date = new Date(yearDate,monthDate,dayDate).toLocaleDateString('pt-PT')
+      }
+      else {
+        fakeDate = new Date(yearDate,monthDate,dayDate).toLocaleDateString('pt-PT')
+      }
+
+      let data = {
+        // @ts-ignore
+        "date": date,
+        "fakeDate": fakeDate,
+        "text": text,
+        "score": score,
+      }
+      if (irrelevant == 1) {
+        this.multidf.push(data)
+      }
+      else {
+        this.multidf.push(data)
+        this.multidf2.push(data)
+      }
+    }
+
+    this.multidf.sort(function(a, b){
+      const aa = a.fakeDate.split('/').reverse().join(),
+        bb = b.fakeDate.split('/').reverse().join();
+      return aa < bb ? -1 : (aa > bb ? 1 : 0);
+    });
+
+    this.multidf2.sort(function(a, b){
+      const aa = a.fakeDate.split('/').reverse().join(),
+        bb = b.fakeDate.split('/').reverse().join();
+      return aa < bb ? -1 : (aa > bb ? 1 : 0);
+    });
   }
 
   startSingleNarr(url) {
@@ -816,8 +1163,12 @@ export class QueryComponent implements OnChanges {
     }
   }
 
-  toggleRel() {
-    this.showOnlyRel = !this.showOnlyRel;
+  toggleRelAT() {
+    this.showOnlyRelAT = !this.showOnlyRelAT;
+  }
+
+  toggleRelTC() {
+    this.showOnlyRelTC = !this.showOnlyRelTC;
   }
 
   goBack() {
