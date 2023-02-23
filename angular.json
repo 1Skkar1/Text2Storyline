@@ -25,22 +25,26 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "@angular/material/prebuilt-themes/indigo-pink.css",
+              "./node_modules/bootstrap/dist/css/bootstrap.min.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/chart.js/dist/chart.js"
+            ]
           },
           "configurations": {
             "production": {
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "5mb",
+                  "maximumError": "5mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "1mb",
+                  "maximumError": "1mb"
                 }
               ],
               "outputHashing": "all"
@@ -58,12 +62,17 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "text2storyline:build",
+            "proxyConfig": "src/proxy-local.config.json"
+          },
           "configurations": {
             "production": {
               "browserTarget": "text2storyline:build:production"
             },
             "development": {
-              "browserTarget": "text2storyline:build:development"
+              "browserTarget": "text2storyline:build:development",
+              "proxyConfig": "src/proxy-prod.config.json"
             }
           },
           "defaultConfiguration": "development"
@@ -87,12 +96,19 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "@angular/material/prebuilt-themes/indigo-pink.css",
+              "./node_modules/bootstrap/dist/css/bootstrap.min.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/chart.js/dist/chart.js"
+            ]
           }
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "bb919d3b-a6ca-4fe7-b2dc-96d8fcd30792"
   }
 }

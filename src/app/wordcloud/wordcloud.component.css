@@ -1,0 +1,49 @@
+/* --------------- Word Cloud --------------- */
+
+.wordcloud{
+  width: 100%;
+  margin-top: -30px;
+  padding-bottom: 25px;
+  display: inline-block;
+}
+
+.wordPic {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  min-width: 100px;
+  max-width: 800px;
+  vertical-align: middle;
+  border-radius: 15px;
+  box-shadow: 1px 1px 8px 1px #dcdcdc;
+}
+
+/* --------------- Font Styling --------------- */
+
+.pixel-text {
+  font-family: "VT323", cursive;
+  font-size: 25px;
+  cursor: default;
+  text-align: center;
+}
+
+.pixel-text2 {
+  font-family: "VT323", cursive;
+  font-size: 20px;
+  cursor: default;
+  text-align: center;
+}
+
+.pixel-text span {
+  font-weight: bold;
+  text-transform: uppercase;
+  color: var(--main-color-1);
+}
+
+/* --------------- 768px Screens --------------- */
+
+@media screen  and (max-width: 1000px){
+  .wordPic {
+    width: 95% !important;
+  }
+}

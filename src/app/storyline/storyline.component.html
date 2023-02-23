@@ -1,0 +1,20 @@
+<!-- --------- Loading Screen --------- -->
+<div class='{{loading ? "viewable" : "nonviewable"}}'><mat-progress-bar mode="indeterminate"></mat-progress-bar></div>
+<br>
+
+<div *ngIf="queryType == 'single'" class="relToggle">
+  <mat-slide-toggle [disabled]="loading || (allArgs.length == relArgs.length)" *ngIf="allArgs.length > 0 " (toggleChange)='setRelevanceSingle()' class="afterAnnotated" color="primary" [checked]="!relevant">{{ 'storyline.toggle' | translate }}</mat-slide-toggle>
+</div>
+
+<div *ngIf="queryType == 'multiple'" class="relToggle">
+  <mat-slide-toggle [disabled]="loading || (topTen.length == multiRelArgs.length)" *ngIf="topTen.length > 0 " (toggleChange)='setRelevanceMulti()' class="afterAnnotated" color="primary" [checked]="!relevant">{{ 'storyline.toggle' | translate }}</mat-slide-toggle>
+</div>
+<br><br>
+
+<!-- --------- Error Screen --------- -->
+<div *ngIf="noData && lang == 'pt'"><h1>Sem informação para mostrar</h1></div>
+<div *ngIf="noData && lang == 'en'"><h1>No data</h1></div>
+
+<!-- --------- Storyline --------- -->
+<div *ngIf="id == 'normal'" id='my-timeline' style="background-color: #f7f7f7; width: 100%; height: 380px"></div>
+<div *ngIf="id == 'single'" id='single-timeline' style="background-color: #f7f7f7; width: 100%; height: 380px"></div>

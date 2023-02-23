@@ -1,0 +1,161 @@
+.videoWrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 50%;
+  padding-top: 0;
+  overflow-y: hidden;
+  border-radius: 15px 15px 15px 15px;
+  background-color: rgba(0,0,0,0.5);
+}
+
+.videoWrapper iframe {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  height: 95%;
+  width: 98%;
+  overflow-y: hidden;
+}
+
+iframe {
+  opacity: 1 !important;
+}
+
+.noScroll{
+  overflow-y: hidden;
+}
+
+.cdk-overlay-pane{
+  overflow-y: hidden !important;
+}
+
+@media (min-width: 768px) {
+  .legenda {
+    margin-top: -30px;
+  }
+
+  .legenda b {
+    padding-right: 0;
+  }
+}
+
+@media (max-width: 1225px){
+  .mat-dialog-container {
+    height:80% !important;
+  }
+
+  .Tutorial {
+    padding-left: 38px !important;
+  }
+
+  .legenda b{
+    font-size: 15px !important;
+  }
+}
+
+@media (max-width: 965px){
+  .mat-dialog-container {
+    height:70% !important;
+  }
+
+  .Tutorial {
+    padding-left: 33px !important;
+  }
+  .legenda b{
+    font-size: 15px !important;
+  }
+
+}
+
+@media (max-width: 769px){
+  .mat-dialog-container {
+    height:55% !important;
+  }
+
+  .Tutorial {
+    padding-left: 25px !important;
+  }
+
+  .legenda b{
+    font-size: 15px !important;
+    padding-right: 0 !important;
+  }
+}
+
+@media (max-width: 600px){
+  .mat-dialog-container {
+    height:45% !important;
+  }
+
+  .Tutorial {
+    padding-left: 20px !important;
+  }
+
+  .legenda b{
+    font-size: 13px !important;
+  }
+}
+
+@media (max-width: 415px){
+  .mat-dialog-container {
+    height:38% !important;
+  }
+
+  .Tutorial {
+    padding-left: 13px !important;
+  }
+
+  .legenda b{
+    font-size: 13px !important;
+  }
+}
+
+.legenda b{
+  color: #ffffff;
+  padding-right: 45px;
+}
+
+a {
+  outline: none;
+}
+
+.popup {
+  height: 100%;
+  width: 100%;
+}
+
+.changeCursor{
+  cursor: pointer;
+}
+
+.Tutorial {
+  padding-left: 55px;
+  font-family: 'Work Sans', sans-serif !important;
+}
+.mat-dialog-container{
+  background-color: #000000;
+}
+
+.hora {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 23px;
+  line-height: 15px;
+  font-weight: normal;
+  margin: 0 0 3px 0;
+  color:  rgba(0,64,107,0.89) !important;
+}
+
+.preto{
+  color: #033F72 !important;
+  font-family: "Nexa Bold", cursive !important;
+}
+
+.goodstuff{
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-items: center;
+}

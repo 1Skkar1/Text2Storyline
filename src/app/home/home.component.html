@@ -1,0 +1,570 @@
+<!-- --------- Navbar --------- -->
+<header id="header">
+  <nav class="container">
+    <a href="/">
+      <img class="navlogo" src="assets/Logo.png" alt="Text2Storyline">
+    </a>
+    <a *ngIf="requestMade || loading" href="/" class="logo">Text<span>2</span>Storyline</a>
+    <a *ngIf="!isQueried && !loading" href="#" class="logo">Text<span>2</span>Storyline</a>
+    <div class="links">
+      <ul>
+        <li *ngIf="!isQueried && !loading">
+          <a href="#about" id="aboutTab"  class="nav-link">{{ 'buttons.about' | translate }}</a>
+        </li>
+        <li *ngIf="!isQueried && !loading">
+          <a href="#present" id="presentTab" class="nav-link">{{ 'buttons.present' | translate }}</a>
+        </li>
+        <li *ngIf="!isQueried && !loading">
+          <a href="#past" id="pastTab" class="nav-link">{{ 'buttons.past' | translate }}</a>
+        </li>
+        <li *ngIf="!isQueried && !loading">
+          <a href="#refs" id="refsTab" class="nav-link">{{ 'buttons.refs' | translate }}</a>
+        </li>
+        <li *ngIf="!isQueried && !loading">
+          <a href="#team" id="teamTab" class="nav-link">{{ 'buttons.team' | translate }}</a>
+        </li>
+        <li>
+          <form *ngIf="isQueried" (submit)="beginQuery($event)">
+            <div class="bartop">
+              <input
+                value="{{ queryType == 'single' ? url : inp }}"
+                (change)="beginURL($event)"
+                type="text"
+                class="searchbartop"
+                id="narrativaURL"
+                placeholder= "{{ 'searchbar' | translate }}"
+                aria-label="Search"
+                aria-describedby="search-addon">
+              <button [disabled]="loading" class="searchButton"><i class="uil uil-search"></i></button>
+            </div>
+          </form>
+        </li>
+      </ul>
+      <a [ngClass]="!isQueried ? 'langbutton' : ''" class="toggle-btn" (click)="changeLang()">
+        <img *ngIf="lang == 'pt'" id="portugal" class="langpt" src="assets/portugal.png" alt="Portuguese">
+        <img *ngIf="lang == 'en'" id="english" class="langen" src="assets/english.png" alt="English">
+      </a>
+    </div>
+    <div class="hamburger" id="hamburger" (click)="toggleHamburger()">
+      <div class="line"></div>
+      <div class="line"></div>
+    </div>
+  </nav>
+</header>
+
+<!-- --------- Arrow Up --------- -->
+<div *ngIf="!oops && !loading && !requestMade" class="return-to-top" (click)="topScroll()" id="toTopArrow">
+  <i class="uil uil-arrow-up"></i>
+</div>
+
+<!-- --------- Search Bar --------- -->
+<div *ngIf="!oops && !loading && !requestMade">
+  <div class="main">
+    <div class="mainlogo">
+      <img class="logopic" src="../../assets/Logo.png"  alt="Text2Storyline"/>
+      <h2 class="logotext1">Text<span>2</span>Storyline</h2>
+      <h3 class="logotext2">Generating Enriched Narratives From Text</h3>
+    </div>
+    <form (submit)="beginQuery($event)">
+      <div class="bar">
+        <input
+          value="{{ inp ? inp : url }}"
+          (change)="beginURL($event)"
+          type="text"
+          class="searchbar"
+          id="narrativaURL"
+          placeholder= "{{ 'searchbar' | translate }}"
+          aria-label="Search"
+          aria-describedby="search-addon">
+        <button [disabled]="loading" class="searchButton"><i class="uil uil-search"></i></button>
+      </div>
+    </form>
+    <div class="hub_buttons">
+      <a href="https://github.com/1Skkar1/Text2Storyline" target="_blank" class="github-btn"><i class="uil uil-github"></i><span>&nbsp;GitHub</span></a>
+      <a (click)="changeNarrToggle()" class="text-btn"><i class="uil uil-notebooks"></i><span class="underline">&nbsp;{{ 'text-btn' | translate }}</span></a>
+      <a (click)="openVideo()" class="video-btn"><i class="uil uil-play-circle"></i><span>&nbsp;Video</span></a>
+    </div>
+  </div>
+  <a href="#about">
+    <div class="arrow arrow-container">
+      <div class="arrow-down"></div>
+    </div>
+    <!--
+    <div class="arrow-text">
+      <p>{{ 'narrTitles.narrSuggestion1' | translate }}</p>
+    </div>
+    -->
+  </a>
+</div>
+
+<!-- --------- About Section --------- -->
+<div *ngIf="!loading && !oops && !requestMade" id="about" class="about">
+  <div class="about_container">
+    <div class="narrDividerWhite">
+      <p>{{ 'about.title1' | translate }}</p>
+    </div>
+    <br>
+    <div class="whatis">
+      <mat-card style="padding: 20px">
+        <mat-list style="padding-right: 10px">
+          <span class="p1" [innerHTML]="'about.text1' | translate"></span>
+          <span class="p1" *ngIf="lang == 'pt'"> Faz ainda uso do <a class='redirectText' target="_blank" href="https://wikifier.org/">Wikifier</a> para a deteção e mapeamento das entidades com a respetiva página da Wikipedia.</span>
+          <span class="p1" *ngIf="lang == 'en'"> It also makes use of <a class='redirectText' target="_blank" href="https://wikifier.org/">Wikifier</a> for the detection and mapping of entities with the respective Wikipedia page.</span>
+        </mat-list>
+        <br>
+        <mat-divider></mat-divider>
+
+        <p class="p1" [innerHTML]="'about.text2' | translate"></p>
+
+        <mat-list *ngIf="lang == 'pt'">
+          <p>
+            &bull; <a class='redirectText' href='https://www.ipt.pt/' target='_blank'>Instituto Politécnico de Tomar</a>
+          </p>
+          <p>
+            &bull; <a class='redirectText' href='http://www. ci2.ipt.pt/pt/' target='_blank'>Ci2 - Centro de Investigação em Cidades Inteligentes</a>
+          </p>
+          <p>
+            &bull; <a class='redirectText' href='https://www.inesctec.pt/pt' target='_blank' >INESC TEC</a>
+          </p>
+          <p>
+            &bull; <a class='redirectText' href='https://www.up.pt/portal/en/' target='_blank'>Universidade do Porto</a>
+          </p>
+          <p>
+            &bull; <a class='redirectText' href='http://welcome.unicaen.fr/' target='_blank'>Universidade de Caën</a>
+          </p>
+          <p>
+            &bull; <a class='redirectText' href='https://www.ubi.pt/' target='_blank'>Universidade da Beira Interior</a>
+          </p>
+          <p>
+            &bull; <a class='redirectText' href='https://www.fct.unl.pt/en' target='_blank'>FCT Nova</a>
+          </p>
+          <p>
+            &bull; <a class='redirectText' href='https://www.fct.unl.pt/investigacao/centro-de-matematica-e-aplicacoes' target='_blank'>Centro de Matemática e Aplicações (CMA)</a>
+          </p>
+          <p>
+            &bull; <a class='redirectText' href='https://cma.ubi.pt/' target='_blank'>Centro de Matemática e Aplicações (CMA – UBI)</a>
+          </p>
+        </mat-list>
+
+        <mat-list *ngIf="lang == 'en'">
+          <p>
+            &bull; <a class='redirectText' href='https://www.ipt.pt/' target='_blank'>Polytechnic Institute of Tomar</a>
+          </p>
+          <p>
+            &bull; <a class='redirectText' href='http://www. ci2.ipt.pt/pt/' target='_blank'>Ci2 - Center for Research in Smart Cities</a>
+          </p>
+          <p>
+            &bull; <a class='redirectText' href='https://www.inesctec.pt/pt' target='_blank' >INESC TEC</a>
+          </p>
+          <p>
+            &bull; <a class='redirectText' href='https://www.up.pt/portal/en/' target='_blank'>University of Porto</a>
+          </p>
+          <p>
+            &bull; <a class='redirectText' href='http://welcome.unicaen.fr/' target='_blank'>University of Caën</a>
+          </p>
+          <p>
+            &bull; <a class='redirectText' href='https://www.ubi.pt/' target='_blank'>University of Beira Interior</a>
+          </p>
+          <p>
+            &bull; <a class='redirectText' href='https://www.fct.unl.pt/en' target='_blank'>FCT Nova</a>
+          </p>
+          <p>
+            &bull; <a class='redirectText' href='https://www.fct.unl.pt/investigacao/centro-de-matematica-e-aplicacoes' target='_blank'>Center for Mathematics and Applications (CMA)</a>
+          </p>
+          <p>
+            &bull; <a class='redirectText' href='https://cma.ubi.pt/' target='_blank'>Center for Mathematics and Applications (CMA – UBI)</a>
+          </p>
+        </mat-list>
+      </mat-card>
+    </div>
+    <br>
+  </div>
+</div>
+
+<!-- --------- Stories of the Present Section --------- -->
+<div *ngIf="!loading && !oops && !requestMade" id="present" class="present">
+  <div class="narrDividerBlue">
+    <p>{{ 'narrTitles.narrSuggestion2' | translate }}</p>
+  </div>
+  <br>
+  <div class="row">
+    <!-- --------- Left Trending Searches --------- -->
+    <div *ngIf="!loadingTrends1 && windowWidth > 1100" class="column left">
+      <table class="styled-table fade-in">
+        <thead>
+        <tr>
+          <th class="tableheader">{{ 'narrTitles.tableHeader' | translate }} <span class="headerdate">{{currentDate}}</span></th>
+        </tr>
+        </thead>
+        <tbody *ngFor="let item of trending.slice(0,7)">
+        <tr class="active-row"
+            (click)="!loading ? beginQuery(item) : ''" style="cursor: pointer">
+          <td>{{item}}</td>
+        </tr>
+        </tbody>
+      </table>
+      <!--
+      <div *ngIf="!loadingTrends1 && windowWidth > 1100" class="powered1 fade-in">
+        <h2 class="pixel_powered">powered by Google Trends</h2>
+      </div>
+      -->
+    </div>
+
+    <!-- --------- Main Slideshow --------- -->
+    <div class="column middle">
+      <div class="slidecon">
+        <input type="radio" name="slider" id="item-1" checked>
+        <input type="radio" name="slider" id="item-2">
+        <input type="radio" name="slider" id="item-3">
+        <input type="radio" name="slider" id="item-4">
+        <input type="radio" name="slider" id="item-5">
+        <input type="radio" name="slider" id="item-6">
+        <input type="radio" name="slider" id="item-7">
+        <input type="radio" name="slider" id="item-8">
+        <div class="tiles">
+          <label class="card" for="item-1" id="song-1">
+            <img class="carousel_image" src="assets/1Base_AntonioCostaWide.jpg" alt="song">
+          </label>
+          <label class="card" for="item-2" id="song-2">
+            <img class="carousel_image" src="assets/2Base_WhitneyWide.jpg" alt="song">
+          </label>
+          <label class="card" for="item-3" id="song-3">
+            <img class="carousel_image" src="assets/2Base_JoeBidenWide.jpg" alt="song">
+          </label>
+          <label class="card" for="item-4" id="song-4">
+            <img class="carousel_image" src="assets/3Base_CriseCrimeiaWide.jpg" alt="song">
+          </label>
+          <label class="card" for="item-5" id="song-5">
+            <img class="carousel_image" src="assets/4Base_PutinWide.jpg" alt="song">
+          </label>
+          <label class="card" for="item-6" id="song-6">
+            <img class="carousel_image" src="assets/5Base_IncendiosWide.jpg" alt="song">
+          </label>
+          <label class="card" for="item-7" id="song-7">
+            <img class="carousel_image" src="assets/6Base_TransnistriaWide.jpg" alt="song">
+          </label>
+          <label class="card" for="item-8" id="song-8">
+            <img class="carousel_image" src="assets/7Base_HepatiteWide.jpg" alt="song">
+          </label>
+        </div>
+        <div class="player">
+          <div class="upper-part">
+            <div class="info-area" id="test">
+              <label class="song-info" id="song-info-1">
+                <div class="title">António Costa</div>
+                <div class="sub-line">
+                  <div class="subtitle">{{ 'carousel.tile1' | translate }}</div>
+                </div>
+              </label>
+              <label class="song-info" id="song-info-2">
+                <div class="title">Whitney Houston</div>
+                <div class="sub-line">
+                  <div class="subtitle">{{ 'carousel.tile2' | translate }}</div>
+                </div>
+              </label>
+              <label class="song-info" id="song-info-3">
+                <div class="title">Joe Biden</div>
+                <div class="sub-line">
+                  <div class="subtitle">{{ 'carousel.tile3' | translate }}</div>
+                </div>
+              </label>
+              <label class="song-info" id="song-info-4">
+                <div class="title">{{ 'carousel.name4' | translate }}</div>
+                <div class="sub-line">
+                  <div class="subtitle">{{ 'carousel.tile4' | translate }}</div>
+                </div>
+              </label>
+              <label class="song-info" id="song-info-5">
+                <div class="title">Vladimir Putin</div>
+                <div class="sub-line">
+                  <div class="subtitle">{{ 'carousel.tile5' | translate }}</div>
+                </div>
+              </label>
+              <label class="song-info" id="song-info-6">
+                <div class="title">{{ 'carousel.name6' | translate }}</div>
+                <div class="sub-line">
+                  <div class="subtitle">{{ 'carousel.tile6' | translate }}</div>
+                </div>
+              </label>
+              <label class="song-info" id="song-info-7">
+                <div class="title">{{ 'carousel.name7' | translate }}</div>
+                <div class="sub-line">
+                  <div class="subtitle">{{ 'carousel.tile7' | translate }}</div>
+                </div>
+              </label>
+              <label class="song-info" id="song-info-8">
+                <div class="title">{{ 'carousel.name8' | translate }}</div>
+                <div class="sub-line">
+                  <div class="subtitle">{{ 'carousel.tile8' | translate }}</div>
+                </div>
+              </label>
+            </div>
+          </div>
+          <div class="progress-bar">
+            <span class="progress"></span>
+          </div>
+          <div class="narrButton2">
+            <button type="submit" (click)="!loading ? beginCarouselQuery() : ''" class="btn btn-primary rounded copytext"><i class="uil uil-book-open"></i>&nbsp;&nbsp;{{ 'startNarr' | translate }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- --------- All Trending Searches --------- -->
+    <div *ngIf="!loadingTrends1 && windowWidth <= 1100" class="column left">
+      <table class="styled-table fade-in">
+        <thead>
+        <tr>
+          <th class="tableheader">{{ 'narrTitles.tableHeader' | translate }} <span class="headerdate">{{currentDate}}</span></th>
+        </tr>
+        </thead>
+        <tbody *ngFor="let item of trending.slice(0,10)">
+        <tr class="active-row"
+            (click)="!loading ? beginQuery(item) : ''" style="cursor: pointer">
+          <td>{{item}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--
+    <div *ngIf="!loadingTrends1 && windowWidth <= 1100" class="powered3 fade-in">
+      <h2 class="pixel_powered">powered by Google Trends</h2>
+    </div>
+    -->
+
+    <!-- --------- Right Trending Searches --------- -->
+    <div *ngIf="!loadingTrends1 && windowWidth > 1100" class="column right tableWide">
+      <table class="styled-table fade-in">
+        <thead>
+        <tr>
+          <th class="tableheader">{{ 'narrTitles.tableHeader' | translate }} <span class="headerdate">{{currentDate}}</span></th>
+        </tr>
+        </thead>
+        <tbody *ngFor="let item of trending.slice(7,14)">
+        <tr class="active-row"
+            (click)="!loading ? beginQuery(item) : ''" style="cursor: pointer">
+          <td>{{item}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--
+    <div *ngIf="!loadingTrends1 && windowWidth > 1100" class="powered2 fade-in">
+      <h2 class="pixel_powered">powered by Google Trends</h2>
+    </div>
+    -->
+  </div>
+</div>
+
+<!--
+<a *ngIf="!loading && !oops && !requestMade" (click)="scrollDown2()">
+  <div class="arrow2 arrow-container">
+    <div class="arrow-down"></div>
+  </div>
+</a>
+-->
+
+<!-- --------- Stories of the Past Section --------- -->
+<div *ngIf="!loading && !oops && !requestMade" id="past" class="past">
+  <div class="narrDividerBlue">
+    <p>{{ 'narrTitles.narrSuggestion3' | translate }}</p>
+  </div>
+  <br>
+  <div class="past_container">
+    <div class="newscards1">
+      <div *ngFor="let item of data">
+        <div class="cards">
+          <div class="card__image" style="background: url('../../assets/{{ item.bigPic }}') center / cover no-repeat">
+          </div>
+          <div class="card__body">
+            <div class="card__items--inline">
+              <div class="card__title text--bold">{{ item.title }}</div>
+            </div>
+            <div class="card__items--inline">
+              <div class="rating">
+                <div class="rating__icon">
+                  <i class="uil uil-newspaper"></i>
+                </div>
+                <div class="rating__value"><i>{{ item.byX }}</i></div>
+              </div>
+              <span>&nbsp;&bull;&nbsp;</span>
+              <div class="rating">
+                <div class="rating__value">{{ item.date }}</div>
+                <div class="rating__icon">
+                  <i class="uil uil-calendar-alt"></i>
+                </div>
+              </div>
+            </div>
+            <div class="card__description">
+              <hr/>
+              <p style="font-family: 'Raleway', cursive; margin-top: 10px; flex-wrap: nowrap; font-size: 13px; text-align: justify; text-justify: inter-character;">
+                {{ item.snippet }}
+              </p>
+            </div>
+          </div>
+          <div class="narrButton fade-in">
+            <button type="submit" (click)="!loading ? beginQuery(item.link) : ''" class="btn btn-primary rounded copytext"><i class="uil uil-book-open"></i>&nbsp;&nbsp;{{ 'startNarr' | translate }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- --------- Academic References Section --------- -->
+<div *ngIf="!loading && !oops && !requestMade" class="refs" id="refs">
+  <div class="narrDividerBlue">
+    <p>{{ 'about.title2' | translate }}</p>
+  </div>
+  <br>
+  <div class="references">
+    <mat-card style="padding: 20px">
+      <mat-list style="padding-right: 10px">
+        <p class="p1" *ngIf="lang == 'pt'" style="padding-right: 10px">
+          Ricardo Campos e Alípio Jorge foram financiados pelo <a class='redirectText' href='https://www.europarl.europa.eu/factsheets/pt/sheet/95/el-fondo-europeo-de-desarrollo-regional-feder-' target='_blank'>FEDER - Fundo Europeu de Desenvolvimento Regional</a> através do <a class='redirectText' href='https://www.norte2020.pt/' target='_blank'>Programa Operacional Regional do Norte de Portugal (NORTE 2020)</a>, no âmbito do PORTUGAL 2020 e por Fundos Nacionais através da agência de financiamento portuguesa <a class='redirectText' href='https://www.fct.pt/' target='_blank'>FCT - Fundação para a Ciência e a Tecnologia</a> ao abrigo do projeto <b>PTDC/CCI-COM/31857/2017 (NORTE-01-0145-FEDER-03185)</b>. Este financiamento enquadra-se na linha de pesquisa do projeto <a class='redirectText' href="https://text2story.inesctec.pt/" target="_blank">Text2Story</a>. Célia Nunes foi financiada pela Fundação para a Ciência e a Tecnologia ao abrigo dos projetos <b>UIDB/00212/2020</b>.
+        </p>
+
+        <p class="p1" *ngIf="lang == 'en'" style="padding-right: 10px">
+          Ricardo Campos and Alípio Jorge were funded by <a class='redirectText' href='https://commission.europa.eu/funding-tenders/find-funding/eu-funding-programmes/european-regional-development-fund-erdf_pt' target= '_blank'>ERDF - European Regional Development Fund</a> through the <a class='redirectText' href='https://www.norte2020.pt/' target='_blank'>Northern Portugal Regional Operational Program (NORTE 2020)</a>, within the scope of PORTUGAL 2020 and by National Funds through the Portuguese funding agency <a class='redirectText' href='https://www.fct.pt/' target='_blank'>FCT - Fundação para a Ciência e a Technology</a> under the project <b>PTDC/CCI-COM/31857/2017 (NORTE-01-0145-FEDER-03185)</b>. This funding is part of the research line of the <a class='redirectText' href="https://text2story.inesctec.pt/" target="_blank">Text2Story</a> project. Célia Nunes was funded by the Foundation for Science and Technology under the projects <b>UIDB/00212/2020</b>.
+        </p>
+
+        <mat-divider></mat-divider>
+
+        <p class="p1">
+          &bull; Campos, R., Duque, J., Jorge, A., Dias, G., Nunes, C., (2021). Narrarquivo. Memória Descritiva. Prémio Arquivo.pt 2021. <a class="redirectText" target="_blank" href="https://www.ccc.ipt.pt/~ricardo/ficheiros/narrarquivo.pdf"><b>[pdf]</b></a>
+        </p>
+        <p class="p1">
+          &bull; Campos, R., Duque, J., Cândido, T., Mendes, J., Dias, G., Jorge, A., Nunes, C., (2021). Time-Matters: Temporal Unfolding of Texts. In: Hiemstra D., Moens M-F., Mothe J., Perego R., Potthast M., Sebastiani F. (eds), Advances in Information Retrieval. ECIR'21 (Lucca, Italy. March 28 - April 1). Lecture Notes in Computer Science, vol 12657, pp. 492 - 497. Springer. <a class="redirectText" href="https://link.springer.com/chapter/10.1007/978-3-030-72240-1_53" target="_blank"><b>[pdf]</b></a><a class="redirectText" target ="_blank" href="https://youtu.be/Q8yT4aVM_Mw"><b>[video]</b></a> <a class="redirectText" target="_blank" href="https://www.ccc.ipt.pt/~ricardo/ficheiros/ECIR2021Poster.pdf"><b>[poster]</b></a>
+        </p>
+        <p class="p1">
+          &bull; Campos, R., Dias, G., Jorge, A., Nunes, C. (2017). Identifying Top Relevant Dates for Implicit Time Sensitive Queries. In Information Retrieval Journal. Springer, Vol 20(4), pp 363-398. <a class="redirectText" target="_blank" href="https://link.springer.com/article/10.1007/s10791-017-9302-1"><b>[pdf]</b></a>
+        </p>
+        <p class="p1">
+          &bull; Janez Brank, Gregor Leban, Marko Grobelnik. Annotating Documents with Relevant Wikipedia Concepts. Proceedings of the Slovenian Conference on Data Mining and Data Warehouses (SiKDD 2017), Ljubljana, Slovenia, 9 October 2017. <a class="redirectText" target="_blank" href="https://pdfs.semanticscholar.org/84f0/024bfa6ef18a30453d13a2b110e9b088d449.pdf"><b>[pdf]</b></a>
+        </p>
+      </mat-list>
+    </mat-card>
+  </div>
+</div>
+
+<!-- --------- Team Section --------- -->
+<div *ngIf="!loading && !oops && !requestMade" class="team" id="team">
+  <div class="narrDividerWhite">
+    <p>{{ 'about.title4' | translate }}</p>
+  </div>
+  <br>
+  <div class="team_container">
+    <mat-card style="padding: 20px">
+      <p *ngIf="lang == 'pt'" class="p1">
+        Esta plataforma foi desenvolvida por <b>Ricardo Campos</b>, docente do <a class='redirectText' href='https://www.ipt.pt/' target='_blank'>Instituto Politécnico de Tomar (IPT)</a> e investigador do <a class='redirectText' href='https://www.inesctec.pt/pt' target='_blank' >INESC TEC</a> e do <a class='redirectText' href='http://www. ci2.ipt.pt/pt/' target='_blank'>Ci2 - Centro de Investigação em Cidades Inteligentes</a>,
+        <b>Francisco Gonçalves</b>, aluno da <a class='redirectText' href='https://sigarra.up.pt/fcup/en/web_page.inicial' target='_blank'>Faculdade de Ciências da Universidade do Porto (FCUP)</a>, <b>Jorge Duque</b>, aluno do <a class='redirectText' href='https://www.ipt.pt/' target='_blank'>Instituto Politécnico de Tomar (IPT)</a>, <b>Alípio Jorge</b>, docente na <a class='redirectText' href='https://sigarra.up.pt/fcup/en/web_page.inicial' target='_blank'>Faculdade de Ciências da Universidade do Porto (FCUP)</a> e coordenador do<a class='redirectText' href='http://www.liaad.up.pt/' target='_blank'>LIAAD INESC TEC</a>, <b>Gaël Dias</b>, docente da <a class='redirectText' href='http://welcome.unicaen.fr/' target='_blank'>Universidade de Caën</a>, e <b>Célia Nunes</b>, docente da <a class='redirectText' href='https://www.ubi.pt/' target='_blank'>Universidade da Beira Interior (UBI)</a>, investigadora do <a class='redirectText' href='https://cma.ubi.pt/' target='_blank'>Centro de Matemática e Aplicações (CMA – UBI)</a> e colaboradora do <a class='redirectText' href='https://www.fct.unl.pt/investigacao/centro-de-matematica-e-aplicacoes' target='_blank'>Centro de Matemática e Aplicações (CMA)</a>, <a class='redirectText' href='https://www.fct.unl.pt/en' target='_blank'>FCT Nova</a>.
+      </p>
+      <p *ngIf="lang == 'en'" class="p1">
+        This platform was developed by <b>Ricardo Campos</b>, professor at <a class='redirectText' href='https://www.ipt.pt/' target='_blank'>Polytechnic Institute of Tomar (IPT )</a> and researcher at <a class='redirectText' href='https://www.inesctec.pt/pt' target='_blank' >INESC TEC</a> and <a class='redirectText ' href='http://www. ci2.ipt.pt/pt/' target='_blank'>Ci2 - Center for Research in Smart Cities</a>,
+        <b>Francisco Gonçalves</b>, student at <a class='redirectText' href='https://sigarra.up.pt/fcup/en/web_page.inicial' target='_blank'>Faculty of Sciences University of Porto (FCUP)</a>, <b>Jorge Duque</b>, student of <a class='redirectText' href='https://www.ipt.pt/' target='_blank'> Polytechnic Institute of Tomar (IPT)</a>, <b>Alípio Jorge</b>, teacher at <a class='redirectText' href='https://sigarra.up.pt/fcup/en/web_page. initial' target='_blank'>Faculty of Sciences of the University of Porto (FCUP)</a> and coordinator of<a class='redirectText' href='http://www.liaad.up.pt/' target= '_blank'>LIAAD INESC TEC</a>, <b>Gaël Dias</b>, teacher at <a class='redirectText' href='http://welcome.unicaen.fr/' target='_blank' >University of Caën</a>, and <b>Célia Nunes</b>, professor at <a class='redirectText' href='https://www.ubi.pt/' target='_blank'>University from Beira Interior (UBI)</a>, researcher at <a class='redirectText' href='https://cma.ubi.pt/' target='_blank'>Center for Mathematics and AP licações (CMA – UBI)</a> and collaborator of <a class='redirectText' href='https://www.fct.unl.pt/investigacao/centro-de-matematica-e-aplicacoes' target=' _blank'>Center for Mathematics and Applications (CMA)</a>, <a class='redirectText' href='https://www.fct.unl.pt/en' target='_blank'>FCT Nova</a>.
+      </p>
+      <p *ngIf="lang == 'pt'" class="p1">
+        Uma versão preliminar do <b>Text2Storyline</b>, denominada <a class='redirectText' href='http://time-matters.inesctec.pt/' target='_blank'>time-matters</a> contou com a participação do aluno <a class='redirectText' target="_blank" href="https://www.linkedin.com/in/tiago-c%C3%A2ndido-4590951a8/">Tiago Cândido</a>. <br>
+        A versão Python do pacote de software <b>Time-Matters</b> foi desenvolvida pelo aluno <a class='redirectText' target="_blank" href="https://www.linkedin.com/in/jorge-mendes-75733815a/">Jorge Mendes</a>.
+      </p>
+      <p *ngIf="lang == 'en'" class="p1">
+        A preliminary version of <b>Text2Storyline</b>, named <a class='redirectText' href='http://time-matters.inesctec.pt/' target='_blank'>time-matters</a> had the participation of the student <a class='redirectText' target="_blank" href="https://www.linkedin.com/in/tiago-c%C3%A2ndido-4590951a8/">Tiago Cândido</a>. <br>
+        The Python version of the <b>Time-Matters</b> software package was developed by the student <a class='redirectText' target="_blank" href="https://www.linkedin.com/in/jorge-mendes-75733815a/" >Jorge Mendes</a>.
+      </p>
+
+      <mat-divider></mat-divider>
+
+      <div class="responsive-container-block">
+        <div class="responsive-cell-block wk-desk-3 wk-ipadp-3 wk-tab-6 wk-mobile-12 team-card-container" *ngFor="let item of dataPeople">
+          <div class="team-card fade-in">
+            <div class="img-wrapper">
+              <img class="team-img" src="../../assets/{{item.bigPic}}" alt="{{item.firstName}} {{item.lastName}}" />
+            </div>
+            <p class="text-blk name">{{item.firstName}} {{item.lastName}}</p>
+            <mat-divider class="divname"></mat-divider>
+            <p class="text-blk name2">{{item.occupation}}</p>
+            <div class="social-media-links">
+              <a href="{{item.linkEmail}}" target="_blank"><i class="uil uil-at"></i></a>
+              <a *ngIf="item.linkWebsite" href="{{item.linkWebsite}}" target="_blank"><i class="uil uil-globe"></i></a>
+              <a *ngIf="item.linkGitHub" href="{{item.linkGitHub}}" target="_blank"><i class="uil uil-github"></i></a>
+              <a href="{{item.linkLinkedIn}}" target="_blank"><i class="uil uil-linkedin"></i></a>
+              <a *ngIf="item.linkScholar" href="{{item.linkScholar}}" target="_blank"><i class="uil uil-google"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+
+<!-- --------- Loading Screen --------- -->
+<div *ngIf="loading && !oops">
+  <div *ngIf="queryType == 'freetext'" class="loaderText">
+    <br><br><br><br>
+    <h2 class="loading1" [innerHTML]="'loading.loadingFreeText' | translate"></h2>
+    <br><br><br><br>
+  </div>
+  <div *ngIf="queryType == 'single'" class="loaderText">
+    <h2 class="loading1" [innerHTML]="'loading.loadingURL' | translate"></h2>
+    <br><br>
+    <h3 class="loading2"><i class="darkblue loading3">{{inp}}</i></h3>
+    <br><br><br><br>
+  </div>
+  <div *ngIf="queryType == 'multiple'" class="loaderText">
+    <h2 class="loading1" [innerHTML]="'loading.loadingQuery' | translate"></h2>
+    <br><br><br>
+    <h3 class="loading2">
+      <i class="darkblue loading3" style="line-height: 200%; padding: 10px 12px 10px 10px; border-radius: 10px 10px 10px 10px;">{{inp}}</i>
+    </h3>
+    <br><br><br><br>
+  </div>
+  <div class="loader">
+    <img src="../../assets/loading.gif"  alt="Loading"/>
+    <br><br>
+    <h3 class="loading4">{{ 'loading.loading1' | translate }}</h3>
+  </div>
+</div>
+
+<!-- --------- Error Screen --------- -->
+<div *ngIf="oops">
+  <div *ngIf="queryType == 'single' || queryType == 'multiple'" style="position: absolute; top: 25%; width: 100%">
+    <h2 class="error1">{{ 'error.error1' | translate }}</h2>
+    <br><br>
+    <h2 class="error2" [innerHTML]="'error.error2' | translate"></h2>
+  </div>
+  <div *ngIf="queryType == 'freetext'" style="position: absolute; top: 20%; width: 100%;">
+    <h2 class="error1">{{ 'error.error1' | translate }}</h2>
+    <br><br>
+    <h2 class="error2" [innerHTML]="'error.errorFreeText' | translate"></h2>
+  </div>
+  <a href="./" class="errorlogo">
+    <img style="width: 250px" src="../../assets/Logo.png"  alt="Text2Storyline"/>
+  </a>
+  <div class="errordiv">
+    <h2 class="error2">{{ 'error.error3' | translate }}</h2>
+    <br><br>
+    <a href="/" class="errorbutton">{{ 'error.error4' | translate }}</a>
+  </div>
+</div>
+
+<!-- --------- Results --------- -->
+<div *ngIf="requestMade && !oops && !loading">
+  <app-narrative
+    (toBack)="resetValues()"
+    [errorWikifier]="errorWikifier"
+    [inpSingle]="url"
+    [inpMultiple]="inp"
+    [queryType]="queryType"
+    [article]="result"
+    [summary]="summary"
+    [options]="timelineOptions"
+    [multidocFiles]="multidocFiles"
+    [multidocDates]="multidocDates"
+    [multidocScores]="multidocScores"
+    [topTen]="topTen"
+    [wiki]="wiki"
+    [dbpedia]="dbpedia"
+    [lang]="lang"
+  >
+  </app-narrative>
+</div>

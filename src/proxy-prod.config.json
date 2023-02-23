@@ -1,0 +1,34 @@
+{
+  "/googletrends/*": {
+    "target": "https://tm-websuiteapps.ipt.pt/",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/languageDetection": {
+    "target": "https://tm-websuiteapps.ipt.pt/",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/wikifier": {
+    "target": "https://www.wikifier.org/annotate-article",
+    "pathRewrite": { "^/wikifier": "" },
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/wikipedia": {
+    "target": "https://pt.wikipedia.org/w/api.php",
+    "pathRewrite": { "^/wikipedia": "" },
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/wordCloudCMH/*": {
+    "target": "https://tm-websuiteapps.ipt.pt/",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}

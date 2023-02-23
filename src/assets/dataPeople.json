@@ -1,0 +1,63 @@
+{"data":
+  [
+    {
+      "bigPic": "RCampos.jpg",
+      "firstName":"Ricardo",
+      "lastName":"Campos",
+      "linkLinkedIn": "https://www.linkedin.com/in/camposricardo/",
+      "linkWebsite": "https://www.ccc.ipt.pt/~ricardo/",
+      "linkEmail": "mailto://ricardo.campos@ipt.pt",
+      "linkScholar": "https://scholar.google.com/citations?user=abU3flQAAAAJ&hl=en",
+      "occupation": "Professor and Researcher"
+    },
+    {
+      "bigPic": "FranciscoGonçalves.jpg",
+      "firstName":"Francisco",
+      "lastName":"Gonçalves",
+      "linkLinkedIn": "https://www.linkedin.com/in/fgon16/",
+      "linkGitHub": "https://github.com/1Skkar1",
+      "linkWebsite": "https://fgon16.netlify.app/",
+      "linkEmail": "mailto://fg16.atlas@gmail.com",
+      "occupation": "Software Developer"
+    },
+    {
+      "bigPic": "fotoJorge.png",
+      "firstName":"Jorge",
+      "lastName":"Duque",
+      "linkLinkedIn": "https://www.linkedin.com/in/djorge7/",
+      "linkGitHub": "https://github.com/DarVoid/",
+      "linkEmail": "mailto://jorgeraposoduque@gmail.com",
+      "occupation": "Software Developer"
+    },
+    {
+      "bigPic": "Alipio.jpg",
+      "firstName":"Alípio",
+      "lastName":"Jorge",
+      "linkLinkedIn": "https://www.linkedin.com/in/al%C3%ADpio-jorge-29085813/",
+      "linkWebsite": "https://www.dcc.fc.up.pt/~amjorge/",
+      "linkEmail": "mailto://amjorge@fc.up.pt",
+      "linkScholar": "https://scholar.google.pt/citations?user=wMjqg7QAAAAJ&hl=en",
+      "occupation": "Professor and Researcher"
+    },
+    {
+      "bigPic": "GD.jpg",
+      "firstName":"Gaël",
+      "lastName":"Dias",
+      "linkLinkedIn": "https://www.linkedin.com/in/ga%C3%ABl-dias-98132949/",
+      "linkWebsite": "https://dias.users.greyc.fr/",
+      "linkEmail": "mailto://gael.dias@unicaen.fr",
+      "linkScholar": "https://scholar.google.pt/citations?user=47zG0aIAAAAJ&hl=en",
+      "occupation": "Professor and Researcher"
+    },
+    {
+      "bigPic": "CN.jpg",
+      "firstName":"Célia",
+      "lastName":"Nunes",
+      "linkLinkedIn": "https://www.linkedin.com/in/c%C3%A9lia-nunes-7523a968/",
+      "linkWebsite": "http://www.mat.ubi.pt/~celia/",
+      "linkEmail": "mailto://celian@ubi.pt",
+      "linkScholar": "https://scholar.google.pt/citations?user=fLeYyIIAAAAJ&hl=en",
+      "occupation": "Professor and Researcher"
+    }
+  ]
+}

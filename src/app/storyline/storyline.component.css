@@ -1,0 +1,45 @@
+/* --------------- Button Styling --------------- */
+
+.btn-primary {
+  background-color: #cc4625;
+  border-color: transparent;
+  font-family: 'Work Sans', sans-serif;
+  border-radius: 2px;
+}
+
+.btn-primary:hover, .btn-primary:active, .btn-primary:focus, .btn-primary:not(:disabled):not(.disabled):active {
+  background-color: #993d26;
+  border-color: transparent;
+  box-shadow: 0 0 0 0.2rem rgba(153,61,38,.5);
+}
+
+.relToggle {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+}
+
+/* --------------- Storyline Styling --------------- */
+
+a:link.naoBranco {
+  text-decoration: none;
+  color:#033F72 !important;
+  text-decoration-color:#033F72 !important;
+}
+
+a:visited.naoBranco {
+  text-decoration: none;
+  color:#033F72 !important;
+  text-decoration-color:#033F72 !important;
+}
+
+a:hover.naoBranco {
+  text-decoration: #033F72 !important;
+  color:#033F72 !important;
+}
+
+a:active.naoBranco {
+  text-decoration: none;
+  color:#033F72 !important;
+  text-decoration-color:#033F72 !important;
+}

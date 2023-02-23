@@ -1,0 +1,118 @@
+{
+  "buttons": {
+    "freetext": "Free Text",
+    "narr": "Home",
+    "team": "Team",
+    "about": "About",
+    "refs": "Academic References",
+    "present": "Stories of the Present",
+    "past": "Stories of the Past"
+  },
+
+  "searchbar": "Generate a narrative by typing a query, a URL or a text",
+
+  "text-btn": "Use a text",
+
+  "freetitle": "Generate a narrative from free text",
+
+  "startNarr": "Generate narrative",
+
+  "goBack": "Back to home page",
+
+  "extraFeatures": "See More",
+
+  "narrTitles": {
+    "narrSuggestion1": "Narrative Suggestions",
+    "narrSuggestion2": "Relevant stories of the present",
+    "narrSuggestion3": "Archived stories from the past",
+    "tableHeader": "Most searched queries on"
+  },
+
+  "carousel": {
+    "name4": "Crimean Crisis",
+    "name6": "Forest Fires",
+    "name7": "Transnistria",
+    "name8": "Hepatitis",
+    "tile1": "Prime Minister of Portugal",
+    "tile2": "American Singer",
+    "tile3": "President of the United States of America",
+    "tile4": "War",
+    "tile5": "President of Russia",
+    "tile6": "Disaster",
+    "tile7": "Independent State",
+    "tile8": "Disease"
+  },
+
+  "loading": {
+    "loadingURL": "Generating the narrative for the <span>URL</span>",
+    "loadingQuery": "Generating the narrative for the <span>Query</span>",
+    "loadingFreeText": "Generating the narrative for your <span>Free Text</span>",
+    "loading1": "Please wait..."
+  },
+
+  "error": {
+    "error1": "ERROR",
+    "error2": "Could not generate a narrative for the provided <span>Query</span> or <span>URL</span>",
+    "errorFreeText": "Could not generate a narrative for the provided <span>Free Text</span>",
+    "error3": "Try again",
+    "error4": "Home"
+  },
+
+  "about": {
+    "title1": "What Is Text2Storyline?",
+    "title2": "Academic References",
+    "title3": "Acknowledgements",
+    "title4": "Team",
+    "text1": "<b>Text2Storyline</b> is a project developed with the aim of generating visual narratives with a temporal focus through texts, search queries or links from news pages or other types of content.\n            Several features are available to the user to freely explore their narrative, in particular the <b>Storyline</b> component, which presents the various moments of the narrative chronologically and appropriately illustrated.",
+    "text2": "This project was developed by researchers affiliated with:"
+  },
+
+  "components": {
+    "annotatedtext": "Annotated Text",
+    "entities": "Entities",
+    "storyline": "Storyline",
+    "tempcluster": "Temporal Clustering",
+    "wordcloud": "Word Cloud",
+    "searchres": "Search Results"
+  },
+
+  "annotatedtext": {
+    "likert1": "Likert Scale of",
+    "likert2": "colors to represent the importance of temporal expressions:",
+    "entdetection1": "Entity Detection: ",
+    "entdetection2": "Entity",
+    "entdetection3": " (Click to open the corresponding page)",
+    "toggle1": "Entities",
+    "toggle2": "Keywords",
+    "toggle3": "Less relevant dates",
+    "clipboard": "Copy to Clipboard"
+  },
+
+  "entities": {
+    "errorURL": "Unable to detect Entities for the requested URL",
+    "errorQuery": "Unable to detect <span>Entities for the requested Query",
+    "errorFindURL": "There are no Entities for the requested URL",
+    "errorFindQuery": "There are no Entities for the requested Query",
+    "error1": "Por favor tente novamente"
+  },
+
+  "storyline": {
+    "toggle": "Less relevant dates"
+  },
+
+  "tempcluster": {
+    "toggle": "Less relevant dates"
+  },
+
+  "wordcloud": {
+    "errorURL": "Unable to obtain the Word Cloud for the requested URL",
+    "errorQuery": "Unable to obtain the Word Cloud for the requested Query",
+    "error1": "Por favor tente novamente"
+  },
+
+  "searchres": {
+    "sort": "Sorting of Results:",
+    "scores": "By Scores",
+    "dates": "By Dates"
+  }
+}

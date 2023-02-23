@@ -1,0 +1,108 @@
+<!-- --------- Loading Screen --------- -->
+<div class='{{loading?"viewable": "nonviewable"}}'>
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</div>
+<br>
+<br>
+<div class='{{loading?"viewable": "nonviewable"}}'>
+  <div class="d-flex justify-content-center">
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </div>
+</div>
+
+<br>
+<br>
+
+<!-- --------- Error Screen --------- -->
+<div *ngIf="!loading && error">
+  <div *ngIf="queryType == 'single'">
+    <h2 class="pixel-text">{{ 'entities.errorURL' | translate }}</h2>
+    <a href="./" style="display: flex; justify-content: center;">
+      <img style="width: 100px" src="../../assets/Logo.png"  alt="Text2Storyline"/>
+    </a>
+    <h3 class="pixel-text2">{{ 'entities.error1' | translate }}</h3>
+  </div>
+
+  <div *ngIf="queryType == 'multiple'">
+    <h2 class="pixel-text">{{ 'entities.errorQuery' | translate }}</h2>
+    <a href="./" style="display: flex; justify-content: center;">
+      <img style="width: 100px" src="../../assets/Logo.png"  alt="Text2Storyline"/>
+    </a>
+    <h3 class="pixel-text2">{{ 'entities.error1' | translate }}</h3>
+  </div>
+</div>
+
+<!-- --------- Error Screen --------- -->
+<div *ngIf="!loading && wikiEmpty">
+  <div *ngIf="queryType == 'single'">
+    <h2 class="pixel-text">{{ 'entities.errorFindURL' | translate }}</h2>
+    <a href="./" style="display: flex; justify-content: center;">
+      <img style="width: 100px" src="../../assets/Logo.png"  alt="narrArquivo"/>
+    </a>
+  </div>
+
+  <div *ngIf="queryType == 'multiple'">
+    <h2 class="pixel-text">{{ 'entities.errorFindQuery' | translate }}</h2>
+    <a href="./" style="display: flex; justify-content: center;">
+      <img style="width: 100px" src="../../assets/Logo.png"  alt="narrArquivo"/>
+    </a>
+    <br><br>
+  </div>
+</div>
+
+<!-- --------- Entities --------- -->
+<div *ngIf="!loading && !error && wikiData.length > 4" class="narratives justify-content-center">
+  <div *ngFor="let item of wikiData" (click)="openWikiLink(item.url)">
+    <div class="cards d-flex justify-content-center">
+      <div class="card__image" style="background: url('{{ item.image }}') center / cover no-repeat;">
+      </div>
+      <div class="card__body">
+        <div class="card__items--inline">
+          <div class="card__title text--bold">{{ item.title }}</div>
+        </div>
+        <div class="card__items--inline">
+          <div class="rating">
+            <div class="rating__icon">
+              <i class="uil uil-user-circle"></i>
+            </div>
+            <div class="rating__value">{{ item.class }}</div>
+          </div>
+        </div>
+        <div class="card__description">
+          <hr/>
+          <p style="flex-wrap: nowrap; font-size: 14px; text-align: center; text-justify: inter-character;">
+            {{ item.text }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="!loading && !error && wikiData.length <= 4" class="narratives d-flex justify-content-center">
+  <div *ngFor="let item of wikiData" (click)="openWikiLink(item.url)">
+    <div class="cards d-flex justify-content-center">
+      <div class="card__image" style="background: url('{{ item.image }}') center / cover no-repeat;">
+      </div>
+      <div class="card__body">
+        <div class="card__items--inline">
+          <div class="card__title text--bold">{{ item.title }}</div>
+        </div>
+        <div class="card__items--inline">
+          <div class="rating">
+            <div class="rating__icon">
+              <i class="fas fa-id-badge"></i>
+            </div>
+            <div class="rating__value">{{ item.class }}</div>
+          </div>
+        </div>
+        <div class="card__description">
+          <hr/>
+          <p style="flex-wrap: nowrap; font-size: 14px; text-align: center; text-justify: inter-character;">
+            {{ item.text }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,235 @@
+<!-- --------- Navbar --------- -->
+<header id="header">
+  <nav class="container">
+    <img class="navlogo" src="assets/Logo.png" alt="Text2Storyline">
+    <a href="#" class="logo">Text<span>2</span>Storyline</a>
+    <div class="links">
+      <ul>
+        <li>
+          <a id="narrTextToggle" (click)="changeNarrToggle()" class="nav-link">{{ 'buttons.narr' | translate }}</a>
+        </li>
+      </ul>
+      <a class="langbutton toggle-btn" (click)="changeLang()">
+        <img *ngIf="lang == 'pt'" id="portugal" class="langpt" src="assets/portugal.png" alt="Portuguese">
+        <img *ngIf="lang == 'en'" id="english" class="langen" src="assets/english.png" alt="English">
+      </a>
+    </div>
+    <div class="hamburger" (click)="toggleHamburger()">
+      <div class="line"></div>
+      <div class="line"></div>
+    </div>
+  </nav>
+</header>
+
+<!-- --------- Text Area --------- -->
+<div *ngIf="!result && !loading && !oops">
+  <form (submit)="getKeyword($event)">
+    <div class="freetext">
+      <span title="Example Texts">
+        <button style="z-index: 2; position: absolute; top: 15px; right: 35px" class="btn-link" type="button" [matMenuTriggerFor]="menuSel">
+          <i class="uil uil-ellipsis-h"></i>
+        </button>
+      </span>
+      <div class="freetitle">
+        <p class="letitle pixel-title">{{ 'freetitle' | translate }}</p>
+      </div>
+      <mat-menu #menuSel="matMenu">
+        <button (click)="setDefaultText(0,'English')" mat-menu-item>
+          <span>EN - Haiti Earthquake</span>
+        </button>
+        <div class="divider"></div>
+        <button (click)="setDefaultText(1,'French')"  mat-menu-item>
+          <span>FR - Politics</span>
+        </button>
+        <div class="divider"></div>
+        <button (click)="setDefaultText(3,'Portuguese')" mat-menu-item>
+          <span>PT - Politics </span>
+        </button>
+        <div class="divider"></div>
+        <button (click)="setDefaultText(4,'English')" mat-menu-item>
+          <span>EN - Bombings </span>
+        </button>
+      </mat-menu>
+      <mat-form-field class="txtArea">
+        <textarea [(ngModel)]="conteudoDefault" maxlength="5000" matInput #texto rows="13" cols="175" style="resize: none;" (change)='setDefaultTexto(texto)' type="text" value="{{conteudoDefault}}" name="texto"></textarea>
+      </mat-form-field>
+      <div style="position: absolute; left: 35px; bottom: 25px">
+        <span *ngIf="conteudoDefault.length < 2500" style="opacity: 0.65;">{{5000 - conteudoDefault.length}}</span>
+        <span *ngIf="conteudoDefault.length >= 2500" style="opacity: 0.65; color: darkred; font-weight: bold">{{5000 - conteudoDefault.length}}</span>
+      </div>
+      <button style="z-index: 10; position: absolute; bottom: 15px; right: 85px" class="btn-link" type="submit" [disabled]="loading">
+        <i class="uil uil-book-open"></i>
+      </button>
+      <button style="z-index: 10; position: absolute; bottom: 15px; right: 35px" class="btn-link" type="submit" [disabled]="loading" (click)="deleteContent($event)">
+        <i class="uil uil-trash-alt"></i>
+      </button>
+     </div>
+  </form>
+</div>
+
+<!-- --------- Results --------- -->
+<div *ngIf="!oops && !loading && result">
+  <div class="results my-col2" style="overflow-x: hidden">
+    <span title=""><a class="frase1"></a></span>
+    <div *ngIf="!result else graficos">
+      <h1>Não foram encontrados dados</h1>
+    </div>
+
+    <ng-template #graficos>
+      <mat-card class="cardQuery" style="background-color: white; border: none !important;">
+        <mat-tab-group class="mat-elevation-z0" mat-align-tabs="center" dynamicHeight>
+
+          <!-- --------- Annotated Text --------- -->
+          <mat-tab class="label" label="{{ 'components.annotatedtext' | translate }}">
+            <br>
+            <app-annotatedtext [freeText]="true" [errorWikifier]="errorWikifier" [score]="byDocOrSentence ? 'doc' : 'sentence'" [args]="result" [showOnlyRelevants]="showOnlyRelAT" [keywordsMatter]="withKeywords" [entitiesMatter]="withEntities" [wiki]="wiki" class="result"></app-annotatedtext>
+            <hr>
+            <div class="dateScoreColors">
+              <span><b>{{ 'annotatedtext.likert1' | translate }} <i>{{!showOnlyRelAT?"5": "4"}}</i> {{ 'annotatedtext.likert2' | translate }} </b></span>
+              <span class='{{!showOnlyRelAT?"red": "nonviewable"}}'>[0 - 0.35]</span>
+              <span class="orange">]0.35 - 0.5]</span>
+              <span class="yellow">]0.5 - 0.7]</span>
+              <span class="green">]0.7 - 0.9]</span>
+              <span class="darkgreen">]0.9 - 1.0]</span>
+            </div>
+            <div class="dateScoreColors">
+              <span><b>{{ 'annotatedtext.entdetection1' | translate }}</b></span>
+              <span class="darkblue" style="border-radius: 5px; padding-left: 2px; padding-right: 2px; text-transform: uppercase; font-family: 'VT323', cursive; font-size: 16px">{{ 'annotatedtext.entdetection2' | translate }}</span>
+              <span style="font-size: 12px"><i>{{ 'annotatedtext.entdetection3' | translate }}</i></span>
+            </div>
+            <div style="padding: 10px">
+              <mat-slide-toggle class="normal-toggle afterAnnotated" style="padding-bottom: 5px" color="primary" [checked]="true" (click)="toggleEntities()">{{ 'annotatedtext.toggle1' | translate }}</mat-slide-toggle>
+              <br>
+              <mat-slide-toggle class="normal-toggle afterAnnotated" style="padding-bottom: 5px" color="primary" [checked]="false" (click)="toggleKeywords()">{{ 'annotatedtext.toggle2' | translate }}</mat-slide-toggle>
+              <br>
+              <mat-slide-toggle class="normal-toggle afterAnnotated" color="primary" [checked]="false" [disabled]="datasetFixed.length == datasetFixed2.length" (click)="toggleRelAT()">{{ 'annotatedtext.toggle3' | translate }}</mat-slide-toggle>
+            </div>
+            <div class="clipboard">
+              <button type="submit" (click)="copyToClipboard($event)" class="btn btn-primary rounded copytext"><i class="uil uil-copy"></i>&nbsp;&nbsp;{{ 'annotatedtext.clipboard' | translate }}</button>
+            </div>
+          </mat-tab>
+
+          <!-- --------- Entities --------- -->
+          <mat-tab class="label" label="{{ 'components.entities' | translate }}">
+            <app-entities [errorWikifier]="errorWikifier" [queryType]="'single'" [text]="result.TextNormalized" [summary]="" [wiki]="wiki" [lang]="langSelected"></app-entities>
+          </mat-tab>
+
+          <!-- --------- Storyline --------- -->
+          <mat-tab class="label" label="Storyline" *ngIf="dataset.length>0 && result">
+            <app-storyline [queryType]="'single'" [compGeral]="result" [docSen]="byDocOrSentence" [allArgs]="datasetFixed" [relArgs]="datasetFixed2"></app-storyline>
+          </mat-tab>
+
+          <!-- --------- Temporal Clustering --------- -->
+          <mat-tab class="label" label="{{ 'components.tempcluster' | translate }}" *ngIf="dataset.length>0">
+            <br>
+            <div class="relToggle">
+              <mat-slide-toggle [disabled]="datasetFixed.length == datasetFixed2.length" [checked]="false" (click)='toggleRelTC()' class="afterAnnotated" color="primary">{{ 'tempcluster.toggle' | translate }}</mat-slide-toggle>
+            </div>
+
+            <br><br><br><br>
+
+            <!-- --------- Only Relevant Events --------- -->
+            <div *ngIf="!showOnlyRelTC else allEvents">
+              <div style="margin-top:-80px;" *ngIf="df.length > 0 else nodata1">
+                <div class="timeline">
+                  <div *ngFor="let item of df">
+                    <div class="timeline__event timeline__event--type1">
+                      <div class="timeline__event__date">
+                      <span style="white-space: pre-line">
+                        <h3 style="color: #B4D5FF; font-size: 24px; text-align: center; padding-top: 20px">{{item.date}}</h3>
+                      </span>
+                      </div>
+                      <div class="timeline__event__content ">
+                        <div class="timeline__event__title">
+                          <p [innerHTML]="item.score"></p>
+                        </div>
+                        <div class="timeline__event__description">
+                          <p [innerHTML]="item.text"></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <ng-template #nodata1>
+                <h1 *ngIf="lang == 'pt'" style="text-align: center">Não foram encontrados dados</h1>
+                <h1 *ngIf="lang == 'en'" style="text-align: center">No data</h1>
+              </ng-template>
+            </div>
+
+            <!-- --------- All Events --------- -->
+            <ng-template #allEvents>
+              <div style="margin-top:-80px;" *ngIf="df2.length > 0 else nodata2">
+                <div class="timeline">
+                  <div *ngFor="let item of df2">
+                    <div class="timeline__event timeline__event--type1">
+                      <div class="timeline__event__date">
+                      <span style="white-space: pre-line">
+                        <h3 style="color: #B4D5FF; font-size: 24px; text-align: center; padding-top: 20px">{{item.date}}</h3>
+                      </span>
+                      </div>
+                      <div class="timeline__event__content ">
+                        <div class="timeline__event__title">
+                          <p [innerHTML]="item.score"></p>
+                        </div>
+                        <div class="timeline__event__description">
+                          <p [innerHTML]="item.text"></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <ng-template #nodata2>
+                <h1 *ngIf="lang == 'pt'" style="text-align: center">Não foram encontrados dados</h1>
+                <h1 *ngIf="lang == 'en'" style="text-align: center">No data</h1>
+              </ng-template>
+            </ng-template>
+          </mat-tab>
+
+          <!-- --------- Word Cloud --------- -->
+          <mat-tab class="label" label="{{ 'components.wordcloud' | translate }}">
+            <app-wordcloud [lang]="langSelected" [args]="result" [queryType]="'single'" [multidocFiles]=""></app-wordcloud>
+          </mat-tab>
+        </mat-tab-group>
+      </mat-card>
+      <br>
+    </ng-template>
+  </div>
+
+  <!-- --------- Arrow Back To Home Page --------- -->
+  <div class="go-back">
+    <button mat-fab (click)="goBack()" class="btn btn-primary" title="{{ 'goBack' | translate }}"><i class="uil uil-corner-down-left"></i></button>
+  </div>
+</div>
+
+<!-- --------- Loading Screen --------- -->
+<div *ngIf="loading && !oops">
+  <div class="loaderText">
+    <h2 class="loading1" [innerHTML]="'loading.loadingFreeText' | translate"></h2>
+    <br><br><br><br><br><br><br>
+    <br><br><br><br>
+  </div>
+  <div class="loader">
+    <img src="../../assets/loading.gif"  alt="Loading"/>
+    <br><br>
+    <h3 class="loading4">{{ 'loading.loading1' | translate }}</h3>
+  </div>
+</div>
+
+<!-- --------- Error Screen --------- -->
+<div *ngIf="!loading && oops">
+  <div style="position: absolute; top: 20%; width: 100%;">
+    <h2 class="error1">{{ 'error.error1' | translate }}</h2>
+    <br><br>
+    <h2 class="error2" [innerHTML]="'error.errorFreeText' | translate"></h2>
+  </div>
+  <a href="./" class="errorlogo">
+    <img style="width: 250px" src="../../assets/Logo.png"  alt="Text2Storyline"/>
+  </a>
+  <div class="errordiv">
+    <h2 class="error2">{{ 'error.error3' | translate }}</h2>
+    <br><br>
+    <a href="/" class="errorbutton">{{ 'error.error4' | translate }}</a>
+  </div>
+</div>

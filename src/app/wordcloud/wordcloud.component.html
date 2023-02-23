@@ -1,0 +1,36 @@
+<!-- --------- Loading Screen --------- -->
+<div class='{{loading?"viewable": "nonviewable"}}'>
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</div>
+<br/>
+<br/>
+<div class='{{loading?"viewable": "nonviewable"}}'>
+  <div class="d-flex justify-content-center">
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </div>
+</div>
+
+<!-- --------- Error Screen --------- -->
+<div *ngIf="!loading && error">
+  <div *ngIf="queryType == 'single' || queryType == 'freetext'">
+    <h2 class="pixel-text">{{ 'wordcloud.errorURL' | translate }}</h2>
+    <a href="./" style="display: flex; justify-content: center;">
+      <img style="width: 100px" src="../../assets/Logo.png"  alt="Text2Storyline"/>
+    </a>
+    <h3 class="pixel-text2">{{ 'wordcloud.error1' | translate }}</h3>
+  </div>
+
+  <div *ngIf="queryType == 'multiple'">
+    <h2 class="pixel-text">{{ 'wordcloud.errorQuery' | translate }}</h2>
+    <a href="./" style="display: flex; justify-content: center;">
+      <img style="width: 100px" src="../../assets/Logo.png"  alt="Text2Storyline"/>
+    </a>
+    <h3 class="pixel-text2">{{ 'wordcloud.error1' | translate }}</h3>
+  </div>
+</div>
+<br>
+
+<!-- --------- Word Cloud --------- -->
+<div *ngIf="!loading && !error" class="wordcloud">
+  <img class="wordPic" [src]="wordcloud" alt="Word Cloud">
+</div>

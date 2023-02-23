@@ -1,0 +1,118 @@
+{
+  "buttons": {
+    "freetext": "Texto Livre",
+    "narr": "Início",
+    "team": "Equipa",
+    "about": "Sobre",
+    "refs": "Referências Académicas",
+    "present": "Estórias do Presente",
+    "past": "Estórias do Passado"
+  },
+
+  "searchbar": "Crie uma narrativa com uma query, um URL ou um texto",
+
+  "text-btn": "Usar um texto",
+
+  "freetitle": "Criar narrativa a partir de texto livre",
+
+  "startNarr": "Criar narrativa",
+
+  "goBack": "Retroceder para a página inicial",
+
+  "extraFeatures": "Ver Mais",
+
+  "narrTitles": {
+    "narrSuggestion1": "Sugestões de narrativas",
+    "narrSuggestion2": "Estórias relevantes do presente",
+    "narrSuggestion3": "Estórias arquivadas do passado",
+    "tableHeader": "Termos mais pesquisados a"
+  },
+
+  "carousel": {
+    "name4": "Crise Crimeia",
+    "name6": "Incêndios Florestais",
+    "name7": "Transnístria",
+    "name8": "Hepatite",
+    "tile1": "Primeiro-Ministro de Portugal",
+    "tile2": "Cantora Americana",
+    "tile3": "Presidente dos Estados Unidos da América",
+    "tile4": "Guerra",
+    "tile5": "Presidente da Rússia",
+    "tile6": "Desastre",
+    "tile7": "Região Independente",
+    "tile8": "Doença"
+  },
+
+  "loading": {
+    "loadingURL": "A carregar a narrativa para o <span>URL</span>",
+    "loadingQuery": "A carregar a narrativa para a <span>Query</span>",
+    "loadingFreeText": "A carregar a narrativa para o seu <span>Texto Livre</span>",
+    "loading1": "Por favor aguarde..."
+  },
+
+  "error": {
+    "error1": "ERRO",
+    "error2": "Não foi possível criar uma narrativa para a <span>Query</span> ou <span>URL</span> introduzido",
+    "errorFreeText": "Não foi possível criar uma narrativa para o <span>Texto Livre</span> introduzido",
+    "error3": "Tente novamente",
+    "error4": "Início"
+  },
+
+  "about": {
+    "title1": "O Que é o Text2Storyline?",
+    "title2": "Referências Académicas",
+    "title3": "Agradecimentos",
+    "title4": "Equipa",
+    "text1": "O <b>Text2Storyline</b> é um projeto desenvolvido com o intuito de gerar narrativas visuais com foco temporal através de textos, termos de pesquisa ou links de páginas de notícias ou outro tipo de conteúdo.\n           Diversas funcionalidades são disponibilizadas ao utilizador para explorar livremente a sua narrativa, em particular a componente <b>Storyline</b>, que apresenta os vários momentos da narrativa de forma cronológica e apropriadamente ilustrados.",
+    "text2": "Este projeto foi desenvolvido por investigadores afiliados a:"
+  },
+
+  "components": {
+    "annotatedtext": "Texto Anotado",
+    "entities": "Entidades",
+    "storyline": "Storyline",
+    "tempcluster": "Agrupamento Temporal",
+    "wordcloud": "Nuvem de Palavras",
+    "searchres": "Resultados de Pesquisa"
+  },
+
+  "annotatedtext": {
+    "likert1": "Escala Likert de",
+    "likert2": "cores para representar a importância das expressões temporais:",
+    "entdetection1": "Deteção de Entidades: ",
+    "entdetection2": "Entidade",
+    "entdetection3": " (Clique para abrir a respetiva página)",
+    "toggle1": "Entidades",
+    "toggle2": "Palavras-chave",
+    "toggle3": "Datas menos relevantes",
+    "clipboard": "Copiar para Clipboard"
+  },
+
+  "entities": {
+    "errorURL": "Não foi possível detetar Entidades para o URL introduzido",
+    "errorQuery": "Não foi possível detetar Entidades para a Query introduzida",
+    "errorFindURL": "Não existem Entidades para o URL introduzido",
+    "errorFindQuery": "Não existem Entidades para a Query introduzida",
+    "error1": "Por favor tente novamente"
+  },
+
+  "storyline": {
+    "toggle": "Datas menos relevantes"
+  },
+
+  "tempcluster": {
+    "toggle": "Datas menos relevantes"
+  },
+
+  "wordcloud": {
+    "errorURL": "Não foi possível obter a Nuvem de Palavras para o URL introduzido",
+    "errorQuery": "Não foi possível obter a Nuvem de Palavras para a Query introduzida",
+    "error1": "Por favor tente novamente"
+  },
+
+  "searchres": {
+    "sort": "Ordenação de Resultados:",
+    "scores": "Por Scores",
+    "dates": "Por Datas"
+  }
+}
